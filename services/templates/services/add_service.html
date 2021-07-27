@@ -26,3 +26,12 @@
 
 
 {% endblock %}
+
+{% block postloadjs %}
+	{{ block.super }}
+	<script>
+        $('input[type="checkbox"]').addClass('form-check-input');
+        $('input[type="checkbox"]').parent().addClass('form-check');
+        $('.form-check label').addClass('form-check-label');
+    </script>
+{% endblock %}
