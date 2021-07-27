@@ -12,6 +12,11 @@ class ListServicesView(ListView):
     template_name = 'services/services.html'
 
 
+class ListPricesView(ListView):
+    model = Service
+    template_name = 'services/prices.html'
+
+
 class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
     model = Service
     form_class = ServiceForm

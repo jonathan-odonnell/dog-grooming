@@ -17,10 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from services.urls import urlpatterns, extra_patterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('services/', include('services.urls')),
+    path('services/', include(urlpatterns)),
+    path('prices/', include(extra_patterns)),
     path('profile/', include('profiles.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

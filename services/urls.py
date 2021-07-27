@@ -7,3 +7,7 @@ urlpatterns = [
     path('edit/<int:pk>/', views.EditServiceView.as_view(), name='edit_service'),
     path('delete/<int:pk>/', views.DeleteServiceView.as_view(), name='delete_service'),
 ]
+
+extra_patterns = [
+    path('', views.ListPricesView.as_view(), name='prices'),
+]
