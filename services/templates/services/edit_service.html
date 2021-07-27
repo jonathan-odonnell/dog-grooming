@@ -14,6 +14,7 @@
                 {% csrf_token %}
                 {{ form.name | as_crispy_field }}
                 {{ form.price | as_crispy_field }}
+                {{ form.size | as_crispy_field }}
                 {{ form.description | as_crispy_field }}
                 {{ form.offer | as_crispy_field }}
                 <div class="text-center">
