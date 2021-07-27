@@ -81,17 +81,16 @@ class CheckoutView(View):
             order.stripe_pid = pid
             order.save()
 
-            for item_id, item_data in bag.items():
+            for item_id, item_quantity in bag.items():
                 try:
                     service = Service.objects.get(id=item_id)
-                    for size, quantity in item_data.items():
-                        order_line_item = OrderLineItem(
-                            order=order,
-                            service=service,
-                            quantity=quantity,
-                            size=size,
-                        )
-                        order_line_item.save()
+                    order_line_item = OrderLineItem(
+                        order=order,
+                        service=service,
+                        quantity=item_quantity,
+                        size=service.size,
+                    )
+                    order_line_item.save()
                 except Service.DoesNotExist:
                     messages.error(request, (
                         "One of the services in your bag wasn't found in \
