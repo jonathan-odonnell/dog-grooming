@@ -19,6 +19,7 @@ class ServiceForm(forms.ModelForm):
         placeholders = {
             'name': 'Name',
             'price': 'Price',
+            'size': 'Size',
             'description': 'Description',
         }
 
