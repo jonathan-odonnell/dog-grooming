@@ -1,3 +1,5 @@
-from django.shortcuts import render
+from django.views.generic.base import View, TemplateView
 
-# Create your views here.
+
+class BagView(TemplateView):
+    template_name = "bag/bag.html"
