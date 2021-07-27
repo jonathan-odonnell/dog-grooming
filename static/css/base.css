@@ -1,0 +1,9 @@
+.allauth-form-inner-content label {
+    margin-bottom: 0.5rem;
+}
+
+.allauth-form-inner-content input,
+.allauth-form-inner-content select,
+.allauth-form-inner-content .form-check-label {
+    margin-bottom: 1rem;
+}
