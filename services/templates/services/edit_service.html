@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="container p-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="text-center text-uppercase font-weight-bold">Edit Service</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-10 col-lg-8 mx-auto">
+            <form method="POST" action="{% url 'edit_service' object.id %}">
+                {% csrf_token %}
+                {{ form.name | as_crispy_field }}
+                {{ form.price | as_crispy_field }}
+                {{ form.description | as_crispy_field }}
+                {{ form.offer | as_crispy_field }}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-secondary">Update Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
