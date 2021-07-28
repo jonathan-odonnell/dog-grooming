@@ -1,7 +1,7 @@
 from django import forms
 from .models import UserProfile
 from crispy_forms.helper import FormHelper
-from allauth.account.forms import SignupForm
+from allauth.account.forms import SignupForm, LoginForm
 
 
 class UserProfileForm(forms.ModelForm):
@@ -67,3 +67,12 @@ class SignupForm(SignupForm):
         user.last_name = self.cleaned_data['last_name']
         user.save()
         return user
+
+
+class LoginForm(LoginForm):
+    """ Amended labels and placeholders in the login form """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['login'].label = 'Email Address'
+        self.fields['login'].widget.attrs['placeholder'] = 'Email Address'
+        self.fields['password'].widget.attrs['placeholder'] = 'Password'
