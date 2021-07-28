@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, HttpResponse
 from django.contrib import messages
-from django.views.generic import View
+from django.views import View
 from django.conf import settings
 from bag.context import bag_contents
 from .forms import OrderForm
@@ -8,6 +8,26 @@ from .models import OrderLineItem
 from services.models import Service
 from profiles.models import UserProfile
 import stripe
+import json
+
+
+class CacheCheckoutView(View):
+    http_method_names = ['POST']
+
+    def post(request):
+        try:
+            pid = request.POST.get('client_secret').split('_secret')[0]
+            stripe.api_key = settings.STRIPE_SECRET_KEY
+            stripe.PaymentIntent.modify(pid, metadata={
+                'bag': json.dumps(request.session.get('bag', {})),
+                'save_info': request.POST.get('save_info'),
+                'username': request.user,
+            })
+            return HttpResponse(status=200)
+        except Exception as e:
+            messages.error(request, 'Sorry, your payment cannot be \
+            processed right now. Please try again later.')
+            return HttpResponse(content=e, status=400)
 
 
 class CheckoutView(View):
