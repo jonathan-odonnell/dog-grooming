@@ -59,7 +59,7 @@ class SignupForm(SignupForm):
         for field in self.fields:
             self.fields[field].label = field_names[field]
             self.fields[field].widget.attrs[
-                'placeholder'] = f'{field_names[field]} *'
+                'placeholder'] = field_names[field]
 
     def save(self, request):
         user = super().save(self, request)
