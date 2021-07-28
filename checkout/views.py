@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect, reverse, HttpResponse
+from django.shortcuts import (
+    render, redirect, reverse, get_object_or_404, HttpResponse)
 from django.contrib import messages
 from django.views import View
+from django.views.generic.base import TemplateView
 from django.conf import settings
 from bag.context import bag_contents
 from .forms import OrderForm
-from .models import OrderLineItem
+from .models import Order, OrderLineItem
 from services.models import Service
 from profiles.models import UserProfile
 import stripe
@@ -123,3 +125,20 @@ class CheckoutView(View):
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
+
+
+class CheckoutSuccessView(TemplateView):
+    """ Handle successful checkouts """
+
+    template_name = "checkout/checkout_success.html"
+
+    def get(self, request, order_number, *args, **kwargs):
+        self.order = get_object_or_404(Order, order_number=order_number)
+        if 'bag' in request.session:
+            del request.session['bag']
+        return super().get(self, request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order'] = self.order
+        return context
