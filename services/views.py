@@ -1,3 +1,4 @@
+from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib import messages
@@ -24,15 +25,16 @@ class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
     template_name = 'services/add_service.html'
     success_url = reverse_lazy('services')
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            messages.success(request, 'Successfully added service!')
-        else:
-            messages.error(
-                request, 'Failed to add service. \
-                    Please ensure the form is valid.')
-        return super().post(request, *args, **kwargs)
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Successfully added service!')
+        return redirect(self.success_url)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Failed to add service. \
+            Please ensure the form is valid.')
+        return render(self.request,
+                      self.template_name, self.get_context_data())
 
 
 class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
@@ -41,20 +43,24 @@ class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
     template_name = 'services/edit_service.html'
     success_url = reverse_lazy('services')
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            messages.success(request, 'Successfully updated service!')
-        else:
-            messages.error(request, 'Failed to update service. \
-                Please ensure the form is valid.')
-        return super().post(request, *args, **kwargs)
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Successfully updated service!')
+        return redirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Failed to update service. \
+            Please ensure the form is valid.')
+        return render(self.request,
+                      self.template_name, self.get_context_data())
 
 
 class DeleteServiceView(LoginRequiredMixin, SuperUserRequired, DeleteView):
     model = Service
     success_url = reverse_lazy('services')
+    http_method_names = ['POST']
 
-    def post(self, request, *args, **kwargs):
-        messages.success(request, 'Successfully deleted service!')
-        return super().post(request, *args, **kwargs)
+    def form_valid(self, form):
+        self.object.delete()
+        messages.success(self.request, 'Successfully deleted service!')
+        return redirect(self.get_success_url())
