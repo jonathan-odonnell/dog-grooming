@@ -102,6 +102,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_USERNAME_REQUIRED = False
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
+ACCOUNT_FORMS = {'signup': 'profiles.forms.SignupForm'}
 
 WSGI_APPLICATION = 'dog_groming.wsgi.application'
 
