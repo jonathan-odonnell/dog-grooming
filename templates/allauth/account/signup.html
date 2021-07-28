@@ -11,11 +11,15 @@
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
-  {{ form | crispy }}
+  {{ form.first_name | as_crispy_field }}
+  {{ form.last_name | as_crispy_field }}
+  {{ form.email | as_crispy_field }}
+  {{ form.password1 | as_crispy_field }}
+  {{ form.password2 | as_crispy_field }}
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <button class="btn btn-secondary" type="submit">{% trans "Sign Up" %} &raquo;</button>
+  <button class="btn btn-secondary mt-2" type="submit">{% trans "Sign Up" %} &raquo;</button>
 </form>
 
 {% endblock %}
