@@ -103,7 +103,7 @@ class CheckoutView(View):
             order.stripe_pid = pid
             order.save()
 
-            for item_id, item_quantity in bag.items():
+            for item_id, item_quantity in bag['services'].items():
                 try:
                     service = Service.objects.get(id=item_id)
                     order_line_item = OrderLineItem(
