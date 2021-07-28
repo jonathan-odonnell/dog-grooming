@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
+from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .models import UserProfile
+from checkout.models import Order
 from .forms import UserProfileForm
 
 
@@ -31,3 +33,29 @@ class ProfileView(LoginRequiredMixin, View):
                 request, 'Update failed. Please ensure the form is valid.')
 
         return render(request, self.template_name, {'form': form})
+
+
+class OrdersView(LoginRequiredMixin, TemplateView):
+    """ Display the user's orders. """
+    template_name = 'profiles/orders.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['orders'] = Order.objects.filter(
+            user_profile=self.request.user.userprofile)
+        return context
+
+
+class OrderDetailsView(LoginRequiredMixin, TemplateView):
+    """ Display the user's orders. """
+    template_name = 'checkout/checkout_success.html'
+
+    def get(self, request, order_number, *args, **kwargs):
+        self.order = get_object_or_404(Order, order_number=order_number)
+        return super().get(self, request, order_number, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order'] = self.order
+        context['from_orders'] = True
+        return context
