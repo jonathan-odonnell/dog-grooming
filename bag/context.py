@@ -1,3 +1,4 @@
+from checkout.models import Coupon
 from django.shortcuts import get_object_or_404
 from services.models import Service
 from decimal import Decimal
@@ -26,9 +27,11 @@ def bag_contents(request):
     if coupon:
         current_date = date.today()
         coupon_qs = get_object_or_404(
+            Coupon,
             name=coupon,
             start_date_gte=current_date,
-            end_date_lte=current_date)
+            end_date_lte=current_date
+            )
         discount = coupon_qs.amount
 
     grand_total = Decimal(order_total - discount)
