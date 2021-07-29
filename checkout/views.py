@@ -6,9 +6,10 @@ from django.views.generic.base import TemplateView
 from django.conf import settings
 from bag.context import bag_contents
 from .forms import OrderForm
-from .models import Order, OrderLineItem
+from .models import Order, OrderLineItem, Coupon
 from services.models import Service
 from profiles.models import UserProfile
+from datetime import date
 import stripe
 import json
 
@@ -125,6 +126,21 @@ class CheckoutView(View):
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
+
+
+class AddCouponView(View):
+    def post(self, request):
+        try:
+            current_date = date.today()
+            coupon = Coupon.objects.get(
+                name=request.POST['coupon'],
+                start_date__gte=current_date,
+                end_date__lte=current_date
+            )
+            request.session['coupon'] = coupon.name
+            return HttpResponse(status=200)
+        except Coupon.DoesNotExist:
+            return HttpResponse(status=500)
 
 
 class CheckoutSuccessView(TemplateView):
