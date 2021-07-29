@@ -75,6 +75,7 @@ class OrderLineItem(models.Model):
 
 class Coupon(models.Model):
     name = models.CharField(max_length=20)
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
 
