@@ -11,10 +11,10 @@ def bag_contents(request):
     grand_total = 0
     discount = 0
     item_count = 0
-    bag = request.session.get('bag', {})
+    bag = request.session.get('bag', {'services': {}})
     coupon = request.session.get('coupon', '')
 
-    for item_id, item_quantity in bag.items():
+    for item_id, item_quantity in bag['services'].items():
         service = get_object_or_404(Service, id=item_id)
         order_total += item_quantity * service.price
         item_count += item_quantity
