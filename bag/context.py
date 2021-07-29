@@ -31,16 +31,13 @@ def bag_contents(request):
             end_date_lte=current_date)
         discount = coupon_qs.amount
 
-    order_total = Decimal(order_total * 0.8)
-    tax = Decimal(order_total * 0.2)
-    grand_total = Decimal(order_total + tax - discount)
+    grand_total = Decimal(order_total - discount)
 
     context = {
         'services': services,
         'order_total': order_total,
         'coupon': coupon,
         'discount': discount,
-        'tax': tax,
         'grand_total': grand_total,
         'item_count': item_count,
     }
