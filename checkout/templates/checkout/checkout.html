@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
@@ -25,25 +26,24 @@
 				</div>
 				<div class="col-7">
 					<p class="my-0"><strong>{{ item.service.name }}</strong></p>
-					<p class="my-0 small">Size:
-						{% if item.service.has_sizes %}{{ item.size|upper }}{% else %}N/A{% endif %}</p>
+					<p class="my-0 small">Size: {{ item.service.size }}</p>
 					<p class="my-0 small text-muted">Qty: {{ item.quantity }}</p>
 				</div>
 				<div class="col-3 text-right">
-					<p class="my-0 small text-muted">${{ item.service.price }}</p>
+					<p class="my-0 small text-muted">£{{ item.service.price }}</p>
 				</div>
 			</div>
             <hr class="my-0">
 			<div class="row text-black text-right">
 				<div class="col-7 offset-2">
 					<p class="my-0">Order Total:</p>
-					<p class="my-0">Discount:</p>
+					<p class="my-0 text-danger">Discount:</p>
 					<p class="my-0">Grand Total:</p>
 				</div>
 				<div class="col-3">
-					<p class="my-0">${{ order_total | floatformat:2 }}</p>
-					<p class="my-0">${{ discount | floatformat:2 }}</p>
-					<p class="my-0"><strong>${{ grand_total | floatformat:2 }}</strong></p>
+					<p class="my-0">£{{ order_total | floatformat:2 }}</p>
+					<p class="my-0 text-danger">£{{ discount | floatformat:2 }}</p>
+					<p class="my-0"><strong>£{{ grand_total | floatformat:2 }}</strong></p>
 				</div>
 			</div>
 			{% endfor %}
@@ -118,5 +118,5 @@
 {{ block.super }}
 {{ stripe_public_key|json_script:"id_stripe_public_key" }}
 {{ client_secret|json_script:"id_client_secret" }}
-<script src="{% static 'checkout/js/stripe.js' %}"></script>
+<script src="{% static 'js/stripe.js' %}"></script>
 {% endblock %}
