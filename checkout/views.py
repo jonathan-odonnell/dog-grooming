@@ -47,7 +47,7 @@ class CheckoutView(View):
             return redirect(reverse('services'))
 
         current_bag = bag_contents(request)
-        total = current_bag['total']
+        total = current_bag['grand_total']
         stripe_total = round(total * 100)
         stripe.api_key = self.stripe_secret_key
         intent = stripe.PaymentIntent.create(
@@ -84,6 +84,17 @@ class CheckoutView(View):
 
     def post(self, request):
         bag = request.session.get('bag', {})
+        coupon = request.session.get('coupon', {})
+        coupon_qs = None
+
+        if coupon:
+            current_date = date.today()
+            coupon_qs = get_object_or_404(
+                Coupon,
+                name=coupon,
+                start_date_gte=current_date,
+                end_date_lte=current_date
+            )
 
         form_data = {
             'full_name': request.POST['full_name'],
@@ -100,6 +111,7 @@ class CheckoutView(View):
         order_form = OrderForm(form_data)
         if order_form.is_valid():
             order = order_form.save(commit=False)
+            order.coupon = coupon_qs
             pid = request.POST.get('client_secret').split('_secret')[0]
             order.stripe_pid = pid
             order.save()
