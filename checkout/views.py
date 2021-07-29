@@ -23,6 +23,7 @@ class CacheCheckoutView(View):
             stripe.api_key = settings.STRIPE_SECRET_KEY
             stripe.PaymentIntent.modify(pid, metadata={
                 'bag': json.dumps(request.session.get('bag', {})),
+                'coupon': request.session.get('coupon', ''),
                 'save_info': request.POST.get('save_info'),
                 'username': request.user,
             })
