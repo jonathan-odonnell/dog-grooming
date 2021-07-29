@@ -5,6 +5,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django_countries.fields import CountryField
 from services.models import Service
 from profiles.models import UserProfile
+from decimal import Decimal
 
 
 class Order(models.Model):
@@ -22,7 +23,14 @@ class Order(models.Model):
     country = CountryField(blank_label='Country *')
     postcode = models.CharField(max_length=20, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    order_total = models.DecimalField(max_digits=10,
+                                      decimal_places=2, default=0)
+    coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL,
+                               null=True, blank=True,
+                               related_name='orders')
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    grand_total = models.DecimalField(max_digits=10,
+                                      decimal_places=2, default=0)
     stripe_pid = models.CharField(max_length=254, default='')
 
     def _generate_order_number(self):
@@ -35,8 +43,13 @@ class Order(models.Model):
         """
         Update total each time a line item is added
         """
-        self.total = self.lineitems.aggregate(Sum('lineitem_total'))[
+        self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))[
             'lineitem_total__sum'] or 0
+        if self.coupon:
+            self.discount = self.coupon.amount
+            self.grand_total = Decimal(self.order_total - self.discount)
+        else:
+            self.order_total = self.grand_total
         self.save()
 
     def save(self, *args, **kwargs):
