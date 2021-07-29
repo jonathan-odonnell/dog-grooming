@@ -45,11 +45,12 @@ INSTALLED_APPS = [
     'crispy_forms',
     'phonenumber_field',
     'home',
+    'profiles',
     'services',
+    'gallery',
+    'contact',
     'bag',
     'checkout',
-    'profiles',
-    'contact'
 ]
 
 MIDDLEWARE = [
