@@ -11,7 +11,8 @@ urlpatterns = [
     path('profile/', include('profiles.urls')),
     path('services/', include(urlpatterns)),
     path('prices/', include(extra_patterns)),
+    path('gallery/', include('gallery.urls')),
+    path('contact/', include('contact.urls')),
     path('bag/', include('bag.urls')),
     path('checkout/', include('checkout.urls')),
-    path('contact/', include('contact.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
