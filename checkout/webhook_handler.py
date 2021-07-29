@@ -2,9 +2,10 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
-from .models import Order, OrderLineItem
+from .models import Order, OrderLineItem, Coupon
 from services.models import Service
 from profiles.models import UserProfile
+from datetime import date
 import json
 import time
 
@@ -47,6 +48,7 @@ class StripeWH_Handler:
         intent = event.data.object
         pid = intent.id
         bag = intent.metadata.bag
+        coupon = intent.metadata.coupon
         save_info = intent.metadata.save_info
 
         billing_details = intent.charges.data[0].billing_details
@@ -61,6 +63,7 @@ class StripeWH_Handler:
         # Update profile information if save_info was checked
         profile = None
         username = intent.metadata.username
+        coupon_qs = None
 
         if username != 'AnonymousUser':
             profile = UserProfile.objects.get(user__username=username)
@@ -73,6 +76,14 @@ class StripeWH_Handler:
                 profile.country = shipping_details.address.country
                 profile.postcode = shipping_details.address.postal_code
                 profile.save()
+
+        if coupon:
+            current_date = date.today()
+            coupon_qs = Coupon.objects.get(
+                name=coupon,
+                start_date_gte=current_date,
+                end_date_lte=current_date
+            )
 
         order_exists = False
         attempt = 1
@@ -88,7 +99,8 @@ class StripeWH_Handler:
                     county__iexact=shipping_details.address.state,
                     country__iexact=shipping_details.address.country,
                     postcode__iexact=shipping_details.address.postal_code,
-                    total=total,
+                    coupon=coupon_qs,
+                    grand_total=total,
                     stripe_pid=pid,
                 )
                 order_exists = True
@@ -117,6 +129,7 @@ class StripeWH_Handler:
                     county=shipping_details.address.state,
                     country=shipping_details.address.country,
                     postcode=shipping_details.address.postal_code,
+                    coupon=coupon_qs,
                     stripe_pid=pid,
                 )
                 for item_id, item_quantity in json.loads(
