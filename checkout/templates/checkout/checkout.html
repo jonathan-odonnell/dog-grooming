@@ -66,17 +66,17 @@
 					{{ form.county | as_crispy_field }}
 					{{ form.country | as_crispy_field }}
 					{{ form.postcode | as_crispy_field }}
+					{% if user.is_authenticated %}
                     <div class="form-check">
-						{% if user.is_authenticated %}
-						<label class="form-check-label" for="id-save-info">Save this delivery information to my profile</label>
+						<label class="form-check-label" for="id-save-info">Save this information to my profile</label>
 						<input class="form-check-input" type="checkbox" id="id-save-info" name="save-info" checked>
-						{% else %}
-						<label class="form-check-label" for="id-save-info">
-                            <a class="text-info" href="{% url 'account_signup' %}">Create an account</a> or 
-                            <a class="text-info" href="{% url 'account_login' %}">login</a> to save this information
-                        </label>
-						{% endif %}
 					</div>
+					{% else %}
+					<label class="form-label">
+                        <a class="mb-3" href="{% url 'account_signup' %}">Create an account</a> or 
+                        <a class="mb-3" href="{% url 'account_login' %}">login</a> to save this information
+                    </label>
+					{% endif %}
                 </fieldset>
                 <fieldset class="mb-2">
 					<legend>Payment</legend>
