@@ -13,7 +13,7 @@ class AddServiceView(View):
     def post(self, request, item_id):
         service = get_object_or_404(Service, id=item_id)
         redirect_url = request.POST.get('redirect_url')
-        bag = request.session.get('bag', {})
+        bag = request.session.get('bag', {'services': {}})
 
         if item_id in list(bag['services'].keys()):
             bag['services'][item_id] += 1
@@ -24,6 +24,7 @@ class AddServiceView(View):
             messages.success(request, f'Added {service.name} to bag')
 
         request.session['bag'] = bag
+        print(request.session['bag'])
         return redirect(redirect_url)
 
 
