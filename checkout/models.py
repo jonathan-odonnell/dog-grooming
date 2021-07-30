@@ -43,8 +43,8 @@ class Order(models.Model):
         """
         Update total each time a line item is added
         """
-        self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))[
-            'lineitem_total__sum'] or 0
+        self.order_total = self.order_lineitems.aggregate(
+            Sum('lineitem_total'))['lineitem_total__sum'] or 0
         if self.coupon:
             self.discount = self.coupon.amount
             self.grand_total = Decimal(self.order_total - self.discount)
