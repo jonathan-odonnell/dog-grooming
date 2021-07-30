@@ -40,13 +40,7 @@ class CheckoutView(View):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
 
-    def get(self, request):
-        bag = request.session.get('bag', {})
-        if not bag:
-            messages.error(
-                request, "There's nothing in your bag at the moment")
-            return redirect(reverse('services'))
-
+    def create_intent(self, request):
         current_bag = bag_contents(request)
         total = current_bag['grand_total']
         stripe_total = round(total * 100)
@@ -55,6 +49,24 @@ class CheckoutView(View):
             amount=stripe_total,
             currency=settings.STRIPE_CURRENCY,
         )
+        return intent
+
+    def get_context_data(self, form):
+        context = {
+            'form': form,
+            'stripe_public_key': self.stripe_public_key,
+            'client_secret': self.intent.client_secret
+        }
+        return context
+
+    def get(self, request):
+        bag = request.session.get('bag', {})
+        if not bag:
+            messages.error(
+                request, "There's nothing in your bag at the moment")
+            return redirect(reverse('services'))
+
+        self.intent = self.create_intent(self, request)
 
         if request.user.is_authenticated:
             try:
@@ -75,18 +87,14 @@ class CheckoutView(View):
         else:
             form = self.form_class()
 
-        context = {
-            'form': form,
-            'stripe_public_key': self.stripe_public_key,
-            'client_secret': intent.client_secret
-        }
-
+        context = self.get_context_data(self, form)
         return render(request, self.template_name, context)
 
     def post(self, request):
         bag = request.session.get('bag', {})
         coupon = request.session.get('coupon', {})
         coupon_qs = None
+        self.intent = self.create_intent(self, request)
 
         if coupon:
             current_date = date.today()
@@ -109,9 +117,9 @@ class CheckoutView(View):
             'postcode': request.POST['postcode'],
         }
 
-        order_form = OrderForm(form_data)
-        if order_form.is_valid():
-            order = order_form.save(commit=False)
+        form = OrderForm(form_data)
+        if form.is_valid():
+            order = form.save(commit=False)
             order.coupon = coupon_qs
             pid = request.POST.get('client_secret').split('_secret')[0]
             order.stripe_pid = pid
@@ -139,6 +147,8 @@ class CheckoutView(View):
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
+            context = self.get_context_data(self, form)
+            return render(request, self.template_name, context)
 
 
 class AddCouponView(View):
