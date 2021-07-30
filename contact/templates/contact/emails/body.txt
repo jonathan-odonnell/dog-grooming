@@ -1,0 +1,7 @@
+Hello,
+
+You got a new message from {{ contact.full_name|title }}:
+
+{{ contact.message }}
+
+{{ contact.full_name|title }} can be contacted at {{ contact.email }}
