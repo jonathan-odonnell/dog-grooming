@@ -9,9 +9,9 @@ class Contact(models.Model):
 
     full_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=50)
-    user_profile = models.OneToOneField(UserProfile, on_delete=models.SET_NULL,
-                                        null=True, blank=True,
-                                        related_name='contact')
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.SET_NULL,
+                                     null=True, blank=True,
+                                     related_name='contact')
     date = models.DateTimeField(auto_now=True)
     subject = models.CharField(max_length=50)
     message = models.TextField()
