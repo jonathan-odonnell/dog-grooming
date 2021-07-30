@@ -15,9 +15,9 @@ import json
 
 
 class CacheCheckoutView(View):
-    http_method_names = ['POST']
+    http_method_names = ['post']
 
-    def post(request):
+    def post(self, request):
         try:
             pid = request.POST.get('client_secret').split('_secret')[0]
             stripe.api_key = settings.STRIPE_SECRET_KEY
