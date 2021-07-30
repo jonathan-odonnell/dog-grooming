@@ -49,7 +49,7 @@ class Order(models.Model):
             self.discount = self.coupon.amount
             self.grand_total = Decimal(self.order_total - self.discount)
         else:
-            self.order_total = self.grand_total
+            self.grand_total = self.order_total
         self.save()
 
     def save(self, *args, **kwargs):
