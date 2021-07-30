@@ -56,7 +56,7 @@ form.addEventListener("submit", function (e) {
         client_secret: clientSecret,
         save_info: saveInfo,
     };
-    let url = "/checkout/cache_checkout_data/";
+    let url = "/checkout/cache-checkout-data/";
 
     $.post(url, postData).done(function () {
         stripe.confirmCardPayment(clientSecret, {
@@ -67,11 +67,12 @@ form.addEventListener("submit", function (e) {
                     phone: $.trim(form.phone_number.value),
                     email: $.trim(form.email.value),
                     address: {
-                        line1: $.trim(form.street_address1.value),
-                        line2: $.trim(form.street_address2.value),
+                        line1: $.trim(form.address_line_1.value),
+                        line2: $.trim(form.address_line_2.value),
                         city: $.trim(form.town_or_city.value),
-                        country: $.trim(form.country.value),
                         state: $.trim(form.county.value),
+                        country: $.trim(form.country.value),
+                        postal_code: $.trim(form.postcode.value),
                     },
                 },
             },
@@ -79,35 +80,35 @@ form.addEventListener("submit", function (e) {
                 name: $.trim(form.full_name.value),
                 phone: $.trim(form.phone_number.value),
                 address: {
-                    line1: $.trim(form.street_address1.value),
-                    line2: $.trim(form.street_address2.value),
+                    line1: $.trim(form.address_line_1.value),
+                    line2: $.trim(form.address_line_2.value),
                     city: $.trim(form.town_or_city.value),
+                    state: $.trim(form.county.value),
                     country: $.trim(form.country.value),
                     postal_code: $.trim(form.postcode.value),
-                    state: $.trim(form.county.value),
                 },
             },
-        });
-    }).then(function () {
-        if (result.error) {
-            let errorDiv = document.getElementById("card-errors");
-            let html = `
+        }).then(function (result) {
+            console.log(result)
+            if (result.error) {
+                let errorDiv = document.getElementById("card-errors");
+                let html = `
                     <span class="icon" role="alert">
                     <i class="fas fa-times"></i>
                     </span>
                     <span>${result.error.message}</span>`;
-            $(errorDiv).html(html);
-            $("#payment-form").fadeToggle(100);
-            $("#loading-overlay").fadeToggle(100);
-            card.update({
-                disabled: false
-            });
-            $("#submit-button").attr("disabled", false);
-        } else {
-            if (result.paymentIntent.status === "succeeded") {
-                form.submit();
+                $(errorDiv).html(html);
+                $("#payment-form").fadeToggle(100);
+                card.update({
+                    disabled: false
+                });
+                $("#submit-button").attr("disabled", false);
+            } else {
+                if (result.paymentIntent.status === "succeeded") {
+                    form.submit();
+                }
             }
-        }
+        })
     }).fail(function () {
         // Reload the page, the error will be in django messages
         location.reload();
