@@ -10,3 +10,16 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class BusinessHour(models.Model):
+    class Meta:
+        verbose_name = "Business Hours"
+
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    def __str__(self):
+        return f'{self.start_date} - {self.end_date}'
