@@ -8,8 +8,6 @@ from django.urls import reverse_lazy
 from .models import Service
 from .forms import ServiceForm
 from .utils import SuperUserRequired
-from datetime import date
-from calendar import HTMLCalendar
 
 
 class ServicesView(ListView):
@@ -17,7 +15,7 @@ class ServicesView(ListView):
     template_name = 'services/services.html'
 
 
-class AppointmentsView(DetailView):
+class AppointmentsView(LoginRequiredMixin, DetailView):
     model = Service
     template_name = 'services/appointments.html'
 
