@@ -22,7 +22,7 @@ class Order(models.Model):
     address_line_2 = models.CharField(max_length=80, null=True, blank=True)
     county = models.CharField(max_length=80)
     country = CountryField(blank_label='Country *')
-    postcode = models.CharField(max_length=20, null=True, blank=True)
+    postcode = models.CharField(max_length=20)
     date = models.DateTimeField(auto_now_add=True)
     order_total = models.DecimalField(max_digits=10,
                                       decimal_places=2, default=0)
