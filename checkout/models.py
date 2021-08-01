@@ -91,8 +91,6 @@ class Appointment(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE,
                               null=True, blank=True,
                               related_name='appointments')
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE,
-                                     related_name='appointments')
     start = models.DateTimeField()
     end = models.DateTimeField()
     comments = models.TextField(null=True, blank=True)
