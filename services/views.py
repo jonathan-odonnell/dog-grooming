@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.views.generic import ListView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,16 +8,18 @@ from django.urls import reverse_lazy
 from .models import Service
 from .forms import ServiceForm
 from .utils import SuperUserRequired
+from datetime import date
+from calendar import HTMLCalendar
 
 
-class ListServicesView(ListView):
+class ServicesView(ListView):
     model = Service
     template_name = 'services/services.html'
 
 
-class ListPricesView(ListView):
+class AppointmentsView(DetailView):
     model = Service
-    template_name = 'services/prices.html'
+    template_name = 'services/appointments.html'
 
 
 class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
