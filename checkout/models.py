@@ -6,6 +6,7 @@ from django_countries.fields import CountryField
 from services.models import Service
 from profiles.models import UserProfile
 from decimal import Decimal
+from datetime import datetime
 
 
 class Order(models.Model):
@@ -84,6 +85,21 @@ class OrderLineItem(models.Model):
 
     def __str__(self):
         return f'{self.service.name} on order {self.order.order_number}'
+
+
+class Appointment(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,
+                              null=True, blank=True,
+                              related_name='appointments')
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE,
+                                     related_name='appointments')
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    comments = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{datetime.strptime(self.start, "%d/%m/%Y %H:%M:%S")} - \
+            {datetime.strptime(self.end, "%d/%m/%Y %H:%M:%S")}'
 
 
 class Coupon(models.Model):
