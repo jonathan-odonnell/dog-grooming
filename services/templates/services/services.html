@@ -10,7 +10,17 @@
     </div>
     <div class="row">
         <div class="col-12">
-            {{ object_list }}
+            {% for service in object_list %}
+            <div class="card border-primary rounded-2{% if forloop.counter < object_list|length %} mb-4{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">{{ service.name }}</h5>
+                    <p class="card-text">{{ service.size }}</p>
+                    <p class="card-text">£{{ service.price|floatformat:"2" }}</p>
+                    <p class="card-text">{{ service.description }}</p>
+                    <a href="{% url 'service_appointments' service.id %}" class="btn btn-primary">Book Appointment</a>
+                </div>
+              </div>
+            {% endfor %}
         </div>
     </div>
 </section>
