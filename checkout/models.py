@@ -96,8 +96,8 @@ class Appointment(models.Model):
     comments = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f'{datetime.strptime(self.start, "%d/%m/%Y %H:%M:%S")} - \
-            {datetime.strptime(self.end, "%d/%m/%Y %H:%M:%S")}'
+        return f'{datetime.strftime(self.start, "%d/%m/%Y %H:%M:%S")} - '\
+            f'{datetime.strftime(self.end, "%d/%m/%Y %H:%M:%S")}'
 
 
 class Coupon(models.Model):
