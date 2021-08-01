@@ -1,13 +1,17 @@
-from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.http.response import JsonResponse
+from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.utils import timezone
 from .models import Service
+from checkout.models import Appointment
 from .forms import ServiceForm
 from .utils import SuperUserRequired
+from datetime import datetime
 
 
 class ServicesView(ListView):
@@ -18,6 +22,26 @@ class ServicesView(ListView):
 class AppointmentsView(LoginRequiredMixin, DetailView):
     model = Service
     template_name = 'services/appointments.html'
+    context_object_name = 'service'
+
+    def post(self, request, pk):
+        start = datetime.strptime(
+            request.POST['date'], '%d/%m/%Y').replace(
+                tzinfo=timezone.get_current_timezone())
+        end = start.replace(hour=18)
+        appointments = ['10:00', '13:00', '15:00']
+        booked_appointments = Appointment.objects.filter(
+            start__gte=start, end__lte=end)
+        print(booked_appointments)
+
+        for appointment in booked_appointments:
+            appointment = timezone.localtime(
+                appointment.start, timezone.get_current_timezone()
+                ).strftime('%H:%M')
+            if appointment in appointments:
+                appointments.remove(appointment)
+
+        return JsonResponse({'appointments': appointments})
 
 
 class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
