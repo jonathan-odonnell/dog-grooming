@@ -61,21 +61,19 @@ class StripeWH_Handler:
                 shipping_details.address[field] = None
 
         # Update profile information if save_info was checked
-        profile = None
         username = intent.metadata.username
+        profile = UserProfile.objects.get(user__username=username)
         coupon_qs = None
 
-        if username != 'AnonymousUser':
-            profile = UserProfile.objects.get(user__username=username)
-            if save_info:
-                profile.phone_number = shipping_details.phone
-                profile.address_line_1 = shipping_details.address.line1
-                profile.address_line_2 = shipping_details.address.line2
-                profile.town_or_city = shipping_details.address.city
-                profile.county = shipping_details.address.state
-                profile.country = shipping_details.address.country
-                profile.postcode = shipping_details.address.postal_code
-                profile.save()
+        if save_info:
+            profile.phone_number = shipping_details.phone
+            profile.address_line_1 = shipping_details.address.line1
+            profile.address_line_2 = shipping_details.address.line2
+            profile.town_or_city = shipping_details.address.city
+            profile.county = shipping_details.address.state
+            profile.country = shipping_details.address.country
+            profile.postcode = shipping_details.address.postal_code
+            profile.save()
 
         if coupon:
             current_date = date.today()
