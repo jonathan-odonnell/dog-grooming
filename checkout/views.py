@@ -3,6 +3,7 @@ from django.shortcuts import (
 from django.contrib import messages
 from django.views import View
 from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from bag.context import bag_contents
 from .forms import OrderForm
@@ -34,7 +35,7 @@ class CacheCheckoutView(View):
             return HttpResponse(content=e, status=400)
 
 
-class CheckoutView(View):
+class CheckoutView(LoginRequiredMixin, View):
     form_class = OrderForm
     template_name = 'checkout/checkout.html'
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
@@ -66,35 +67,33 @@ class CheckoutView(View):
                 request, "There's nothing in your bag at the moment")
             return redirect(reverse('services'))
 
-        self.intent = self.create_intent(self, request)
+        self.intent = self.create_intent(request)
 
-        if request.user.is_authenticated:
-            try:
-                profile = UserProfile.objects.get(user=request.user)
-                form = self.form_class(initial={
-                    'full_name': profile.user.get_full_name(),
-                    'email': profile.user.email,
-                    'phone_number': profile.phone_number,
-                    'address_line_1': profile.address_line_1,
-                    'address_line_2': profile.address_line_2,
-                    'town_or_city': profile.town_or_city,
-                    'county': profile.county,
-                    'country': profile.country,
-                    'postcode': profile.postcode,
-                })
-            except UserProfile.DoesNotExist:
-                form = self.form_class()
-        else:
+        try:
+            profile = UserProfile.objects.get(user=request.user)
+            form = self.form_class(initial={
+                'full_name': profile.user.get_full_name(),
+                'email': profile.user.email,
+                'phone_number': profile.phone_number,
+                'address_line_1': profile.address_line_1,
+                'address_line_2': profile.address_line_2,
+                'town_or_city': profile.town_or_city,
+                'county': profile.county,
+                'country': profile.country,
+                'postcode': profile.postcode,
+            })
+        except UserProfile.DoesNotExist:
             form = self.form_class()
 
-        context = self.get_context_data(self, form)
+        context = self.get_context_data(form)
         return render(request, self.template_name, context)
 
     def post(self, request):
         bag = request.session.get('bag', {})
         coupon = request.session.get('coupon', {})
         coupon_qs = None
-        self.intent = self.create_intent(self, request)
+        self.intent = self.create_intent(request)
+        profile = UserProfile.objects.get(user=request.user)
 
         if coupon:
             current_date = date.today()
@@ -123,6 +122,7 @@ class CheckoutView(View):
             order.coupon = coupon_qs
             pid = request.POST.get('client_secret').split('_secret')[0]
             order.stripe_pid = pid
+            order.user_profile = profile
             order.save()
 
             for item_id, item_quantity in bag['services'].items():
