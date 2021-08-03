@@ -166,7 +166,7 @@ class AddCouponView(View):
             return HttpResponse(status=500)
 
 
-class CheckoutSuccessView(TemplateView):
+class CheckoutSuccessView(LoginRequiredMixin, TemplateView):
     """ Handle successful checkouts """
 
     template_name = "checkout/checkout_success.html"
