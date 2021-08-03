@@ -1,3 +1,4 @@
+from django.urls.base import reverse
 from django.views.generic.base import View, TemplateView
 from django.shortcuts import redirect, get_object_or_404, HttpResponse
 from django.contrib import messages
@@ -12,7 +13,6 @@ class AddServiceView(View):
     """ Add the specified service to the shopping bag """
     def post(self, request, item_id):
         service = get_object_or_404(Service, id=item_id)
-        redirect_url = request.POST.get('redirect_url')
         bag = request.session.get('bag', {'services': {}})
 
         if item_id in list(bag['services'].keys()):
@@ -25,7 +25,7 @@ class AddServiceView(View):
 
         request.session['bag'] = bag
         print(request.session['bag'])
-        return redirect(redirect_url)
+        return redirect(reverse('services'))
 
 
 class RemoveServiceView(View):
