@@ -7,3 +7,20 @@
 .allauth-form-inner-content .form-check-label {
     margin-bottom: 1rem;
 }
+
+#calendar .disabled {
+    color: #868e96;
+}
+
+#calendar .availability-1 {
+    background-color: red;
+}
+
+#calendar .availability-2 {
+    background-color: orange;
+
+}
+
+#calendar .availability-3 {
+    background-color: green;
+}
