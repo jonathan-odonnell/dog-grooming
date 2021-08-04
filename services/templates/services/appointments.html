@@ -191,7 +191,8 @@
         $.post(window.location, postData).done(function (res) {
             let html = '';
             for (let i in res.appointments) {
-                html += `<button class="btn btn-primary">${res.appointments[i]}</button>`;
+                let appointmentTime = `${postData.date} ${res.appointments[i]}`
+                html += `<button type="submit" class="btn btn-primary" name="appointment" value="${appointmentTime}">${res.appointments[i]}</button>`;
             }
             $('#appointments').append(html);
         });
