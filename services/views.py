@@ -28,31 +28,36 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, month=None, year=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        day = 1
+
         if not month:
             current_date = date.today()
+            day = current_date.day
             month = current_date.month
             year = current_date.year
+
+        num_days = calendar.monthrange(year, month)[1]
+        classes = []
+
+        for i in range(1, num_days + 1):
+            day_date = date(year, month, i)
+            appointments = self.get_appointments(day_date)
+            if i >= day and len(appointments) == 1:
+                classes.append('availability-1')
+            elif i >= day and len(appointments) == 2:
+                classes.append('availability-2')
+            elif i >= day and len(appointments) == 3:
+                classes.append('availability-3')
+            else:
+                classes.append('disabled')
+
         context['calendar'] = Calendar(6).monthdayscalendar(year, month)
+        context['classes'] = classes
         context['month'] = calendar.month_name[month]
         context['year'] = year
         return context
 
-    def get(self, request, pk, month=None, year=None):
-        self.object = self.get_object()
-        context = self.get_context_data(month, year)
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return JsonResponse({
-                'calendar': context['calendar'],
-                'month': context['month'],
-                'year': context['year'],
-            })
-        else:
-            return self.render_to_response(context)
-
-    def post(self, request, pk):
-        date = datetime.strptime(
-            request.POST['date'], '%d/%m/%Y').replace(
-                tzinfo=timezone.get_current_timezone())
+    def get_appointments(self, date):
         business_hours = BusinessHour.objects.get(
             start_date__lte=date, end_date__gte=date)
         appointments = ['10:00', '13:00', '15:00']
@@ -82,6 +87,26 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
             if appointment in appointments:
                 appointments.remove(appointment)
 
+        return appointments
+
+    def get(self, request, pk, month=None, year=None):
+        self.object = self.get_object()
+        context = self.get_context_data(month, year)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'calendar': context['calendar'],
+                'classes': context['classes'],
+                'month': context['month'],
+                'year': context['year'],
+            })
+        else:
+            return self.render_to_response(context)
+
+    def post(self, request, pk):
+        date = datetime.strptime(
+            request.POST['date'], '%d/%m/%Y').replace(
+                tzinfo=timezone.get_current_timezone())
+        appointments = self.get_appointments(date)
         return JsonResponse({'appointments': appointments})
 
 
