@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% load services_tools %}
 
 <section class="container p-4">
     <div class="row mb-4">
@@ -11,7 +12,7 @@
     <div class="row">
         <div id="calendar" class="col-12 col-lg-6 mx-auto">
             <div class="d-flex justify-content-between mb-2">
-                <button id="prev-month" class="btn ms-3">
+                <button id="prev-month" class="btn ms-3" disabled>
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <h5 class="fw-bold">{{ month }} {{ year }}</h5>
@@ -36,7 +37,7 @@
                     <tr>
                         {% for day in week %}
                         {% if day > 0 %}
-                        <td>{{ day }}</td>
+                        <td class="{{ classes|index:day}}">{{ day }}</td>
                         {% else %}
                         <td class="disabled"></td>
                         {% endif %}
@@ -106,10 +107,11 @@
                     for (let d in res.calendar[w]) {
                         if (res.calendar[w][d] > 0) {
                             date.setDate(parseInt(res.calendar[w][d]))
+                            let day = parseInt(res.calendar[w][d])
                             if (res.calendar[w][d] > 0 && date >= startDate && date <= endDate) {
-                                html += `<td>${res.calendar[w][d]}</td>`;
+                                html += `<td class=${res.classes[day - 1]}>${day}</td>`;
                             } else {
-                                html += `<td class="disabled">${res.calendar[w][d]}</td>`;
+                                html += `<td class="disabled">${day}</td>`;
                             }
                         } else {
                             html += '<td class="disabled"></td>';
@@ -118,10 +120,17 @@
                     html +='</tr>';
                 }
                 $('#calendar tbody').html(html);
+                date.setDate(1)
+                if (startDate >= date) {
+                    $('#prev-month').attr('disabled', true);
+                    $('#next-month').attr('disabled', false);
+                } else {
+                    $('#prev-month').attr('disabled', false);
+                    $('#next-month').attr('disabled', false);
+                }
             });
         } else {
             let date = new Date(`01 ${month} ${year}`)
-            
             if (month === 'December') {
                 month = months['0']
                 year = parseInt(year + 1)
@@ -139,10 +148,11 @@
                     for (let d in res.calendar[w]) {
                         if (res.calendar[w][d] > 0) {
                             date.setDate(parseInt(res.calendar[w][d]))
+                            let day = parseInt(res.calendar[w][d])
                             if (res.calendar[w][d] > 0 && date >= startDate && date <= endDate) {
-                                html += `<td>${res.calendar[w][d]}</td>`;
+                                html += `<td class="${res.classes[day - 1]}">${day}</td>`;
                             } else {
-                                html += `<td class="disabled">${res.calendar[w][d]}</td>`;
+                                html += `<td class="disabled">${day}</td>`;
                             }
                         } else {
                             html += '<td class="disabled"></td>';
@@ -151,6 +161,15 @@
                     html +='</tr>';
                 }
                 $('#calendar tbody').html(html);
+                date.setDate(1)
+                date.setMonth(date.getMonth() + 1)
+                if (endDate < date) {
+                    $('#prev-month').attr('disabled', false);
+                    $('#next-month').attr('disabled', true);
+                } else {
+                    $('#prev-month').attr('disabled', false);
+                    $('#next-month').attr('disabled', false);
+                }
             });
         }
     });
