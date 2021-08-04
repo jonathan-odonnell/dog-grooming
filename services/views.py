@@ -7,11 +7,13 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
-from .models import Service
+from .models import Service, BusinessHour
 from checkout.models import Appointment
 from .forms import ServiceForm
 from .utils import SuperUserRequired
-from datetime import datetime
+from datetime import datetime, date, timedelta
+import calendar
+from calendar import Calendar
 
 
 class ServicesView(ListView):
@@ -24,20 +26,59 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
     template_name = 'services/appointments.html'
     context_object_name = 'service'
 
+    def get_context_data(self, month=None, year=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if not month:
+            current_date = date.today()
+            month = current_date.month
+            year = current_date.year
+        context['calendar'] = Calendar(6).monthdayscalendar(year, month)
+        context['month'] = calendar.month_name[month]
+        context['year'] = year
+        return context
+
+    def get(self, request, pk, month=None, year=None):
+        self.object = self.get_object()
+        context = self.get_context_data(month, year)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'calendar': context['calendar'],
+                'month': context['month'],
+                'year': context['year'],
+            })
+        else:
+            return self.render_to_response(context)
+
     def post(self, request, pk):
-        start = datetime.strptime(
+        date = datetime.strptime(
             request.POST['date'], '%d/%m/%Y').replace(
                 tzinfo=timezone.get_current_timezone())
-        end = start.replace(hour=18)
+        business_hours = BusinessHour.objects.get(
+            start_date__lte=date, end_date__gte=date)
         appointments = ['10:00', '13:00', '15:00']
+        appointments_start = datetime.combine(
+            date, business_hours.start_time).replace(
+            tzinfo=timezone.get_current_timezone())
+        appointments_end = datetime.combine(
+            date, business_hours.end_time).replace(
+            tzinfo=timezone.get_current_timezone())
         booked_appointments = Appointment.objects.filter(
-            start__gte=start, end__lte=end)
-        print(booked_appointments)
+            start__gte=appointments_start,
+            end__lte=appointments_end
+        )
+
+        for appointment in appointments:
+            appointment_start = datetime.strptime(appointment, '%H:%M').time()
+            appointment_end = (datetime.strptime(
+                appointment, '%H:%M') + timedelta(hours=2)).time()
+            if (appointment_start <= business_hours.start_time
+                    or appointment_end > business_hours.end_time):
+                appointments.remove(appointment)
 
         for appointment in booked_appointments:
             appointment = timezone.localtime(
                 appointment.start, timezone.get_current_timezone()
-                ).strftime('%H:%M')
+            ).strftime('%H:%M')
             if appointment in appointments:
                 appointments.remove(appointment)
 
