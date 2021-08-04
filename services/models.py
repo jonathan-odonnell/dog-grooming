@@ -15,6 +15,7 @@ class Service(models.Model):
 class BusinessHour(models.Model):
     class Meta:
         verbose_name = "Business Hours"
+        verbose_name_plural = "Business Hours"
 
     start_time = models.TimeField()
     end_time = models.TimeField()
