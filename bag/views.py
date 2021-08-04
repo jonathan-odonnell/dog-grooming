@@ -16,15 +16,19 @@ class AddServiceView(View):
         bag = request.session.get('bag', {'services': {}})
 
         if item_id in list(bag['services'].keys()):
-            bag['services'][item_id] += 1
+            bag['services'][item_id]['quantity'] += 1
+            bag['services'][item_id]['appointments'].append(
+                request.POST['appointment'])
             messages.success(
                 request, f'Added {service.name} to bag')
         else:
-            bag['services'][item_id] = 1
+            bag['services'][item_id] = {
+                'quantity': 1,
+                'appointments': [request.POST['appointment']]
+            }
             messages.success(request, f'Added {service.name} to bag')
 
         request.session['bag'] = bag
-        print(request.session['bag'])
         return redirect(reverse('services'))
 
 
