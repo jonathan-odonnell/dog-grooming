@@ -1,6 +1,7 @@
-from dog_groming.settings import GOOGLE_API_KEY
-from django.shortcuts import render, get_object_or_404
-from django.views import View
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.views.generic.edit import UpdateView
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -10,32 +11,37 @@ from checkout.models import Order
 from .forms import UserProfileForm
 
 
-class ProfileView(LoginRequiredMixin, View):
+class ProfileView(LoginRequiredMixin, UpdateView):
     """ Display the user's profile. """
-
+    model = UserProfile
     form_class = UserProfileForm
     template_name = 'profiles/profile.html'
     google_api_key = settings.GOOGLE_API_KEY
+    success_url = reverse_lazy('profile')
 
-    def get(self, request):
-        form = self.form_class(initial={'email_address': request.user.email})
-        return render(request, self.template_name, {'form': form, 'google_api_key': self.google_api_key})
+    def get_object(self):
+        return get_object_or_404(UserProfile, user=self.request.user)
 
-    def post(self, request):
-        profile = get_object_or_404(UserProfile, user=request.user)
-        form = self.form_class(request.POST, instance=profile)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['google_api_key'] = settings.GOOGLE_API_KEY
+        return context
 
-        if form.is_valid():
-            profile = form.save()
-            profile.user.email = request.POST['email_address']
-            profile.user.save()
-            messages.success(request, 'Profile updated successfully')
+    def get(self, request, *args: str, **kwargs):
+        self.initial = {'email_address': request.user.email}
+        return super().get(request, *args, **kwargs)
 
-        else:
-            messages.error(
-                request, 'Update failed. Please ensure the form is valid.')
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.user.email = self.request.POST['email_address']
+        self.object.user.save()
+        messages.success(self.request, 'Profile updated successfully')
+        return HttpResponseRedirect(self.get_success_url())
 
-        return render(request, self.template_name, {'form': form, 'google_api_key': self.google_api_key})
+    def form_invalid(self, form):
+        messages.error(
+            self.request, 'Update failed. Please ensure the form is valid.')
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class OrdersView(LoginRequiredMixin, TemplateView):
