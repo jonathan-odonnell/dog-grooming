@@ -20,6 +20,7 @@ class UserProfileForm(forms.ModelForm):
         placeholders = {
             'email_address': 'Email Address',
             'phone_number': 'Phone Number',
+            'address': 'Address',
             'address_line_1': 'Address Line 1',
             'address_line_2': 'Address Line 2',
             'town_or_city': 'Town or City',
@@ -28,6 +29,7 @@ class UserProfileForm(forms.ModelForm):
         }
 
         self.fields['email_address'] = forms.CharField()
+        self.fields['address'] = forms.CharField()
         for field in self.fields:
             if field != 'country':
                 if self.fields[field].required:
