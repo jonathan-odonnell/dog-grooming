@@ -1,6 +1,5 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
 from django.views.generic.edit import UpdateView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -24,7 +23,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['google_api_key'] = settings.GOOGLE_API_KEY
+        context['google_api_key'] = self.google_api_key
         return context
 
     def get(self, request, *args: str, **kwargs):
@@ -36,7 +35,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         self.object.user.email = self.request.POST['email_address']
         self.object.user.save()
         messages.success(self.request, 'Profile updated successfully')
-        return HttpResponseRedirect(self.get_success_url())
+        return redirect(self.get_success_url())
 
     def form_invalid(self, form):
         messages.error(
