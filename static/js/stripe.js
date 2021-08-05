@@ -47,7 +47,6 @@ form.addEventListener("submit", function (e) {
         disabled: true
     });
     $("#submit-button").attr("disabled", true);
-    $("#payment-form").fadeToggle(100);
 
     let saveInfo = $("#id-save-info").is(":checked")
     let csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
