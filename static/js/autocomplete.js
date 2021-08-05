@@ -12,7 +12,6 @@ function initAutocomplete() {
         fields: ["address_components", "geometry"],
         types: ["address"],
     });
-    address1Field.focus();
     autocomplete.addListener("place_changed", fillInAddress);
 }
 
