@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="col-12 col-md-10 col-lg-8 mx-auto">
-            <form method="POST" action="{% url 'edit_service' object.id %}">
+            <form action="{% url 'edit_service' service.id %}" method="POST">
                 {% csrf_token %}
                 {{ form.name | as_crispy_field }}
                 {{ form.price | as_crispy_field }}

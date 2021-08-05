@@ -18,13 +18,14 @@ from calendar import Calendar
 
 class ServicesView(ListView):
     model = Service
+    context_object_name = 'services'
     template_name = 'services/services.html'
 
 
 class AppointmentsView(LoginRequiredMixin, DetailView):
     model = Service
-    template_name = 'services/appointments.html'
     context_object_name = 'service'
+    template_name = 'services/appointments.html'
 
     def get_context_data(self, month=None, year=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -113,6 +114,7 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
 class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
     model = Service
     form_class = ServiceForm
+    context_object_name = 'service'
     template_name = 'services/add_service.html'
     success_url = reverse_lazy('services')
 
@@ -131,6 +133,7 @@ class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
 class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
     model = Service
     form_class = ServiceForm
+    context_object_name = 'service'
     template_name = 'services/edit_service.html'
     success_url = reverse_lazy('services')
 

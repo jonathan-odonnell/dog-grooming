@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            {% for service in object_list %}
+            {% for service in services %}
             <div class="card border-primary rounded-2{% if forloop.counter < object_list|length %} mb-4{% endif %}">
                 <div class="card-body">
                     <h5 class="card-title fw-bold mb-3">{{ service.name }}</h5>
