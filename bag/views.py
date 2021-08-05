@@ -9,7 +9,7 @@ class BagView(TemplateView):
     template_name = "bag/bag.html"
 
 
-class AddServiceView(View):
+class AddServiceToBagView(View):
     """ Add the specified service to the shopping bag """
     def post(self, request, item_id):
         service = get_object_or_404(Service, id=item_id)
@@ -32,7 +32,7 @@ class AddServiceView(View):
         return redirect(reverse('services'))
 
 
-class RemoveServiceView(View):
+class RemoveServiceFromBagView(View):
     """ Removes the specified service from the shopping bag """
     def post(self, request, item_id):
         try:
