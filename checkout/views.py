@@ -97,7 +97,7 @@ class CheckoutView(LoginRequiredMixin, View):
         profile = UserProfile.objects.get(user=request.user)
 
         if coupon:
-            current_date = date.today()
+            current_date = make_aware(date.today())
             coupon_qs = get_object_or_404(
                 Coupon,
                 name=coupon,
