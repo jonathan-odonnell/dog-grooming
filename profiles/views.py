@@ -1,8 +1,10 @@
+from dog_groming.settings import GOOGLE_API_KEY
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.conf import settings
 from .models import UserProfile
 from checkout.models import Order
 from .forms import UserProfileForm
@@ -13,10 +15,11 @@ class ProfileView(LoginRequiredMixin, View):
 
     form_class = UserProfileForm
     template_name = 'profiles/profile.html'
+    google_api_key = settings.GOOGLE_API_KEY
 
     def get(self, request):
         form = self.form_class(initial={'email_address': request.user.email})
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'google_api_key': self.google_api_key})
 
     def post(self, request):
         profile = get_object_or_404(UserProfile, user=request.user)
@@ -32,7 +35,7 @@ class ProfileView(LoginRequiredMixin, View):
             messages.error(
                 request, 'Update failed. Please ensure the form is valid.')
 
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'google_api_key': self.google_api_key})
 
 
 class OrdersView(LoginRequiredMixin, TemplateView):

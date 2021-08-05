@@ -41,6 +41,7 @@ class CheckoutView(LoginRequiredMixin, View):
     template_name = 'checkout/checkout.html'
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
+    google_api_key = settings.GOOGLE_API_KEY
 
     def create_intent(self, request):
         current_bag = bag_contents(request)
@@ -57,7 +58,8 @@ class CheckoutView(LoginRequiredMixin, View):
         context = {
             'form': form,
             'stripe_public_key': self.stripe_public_key,
-            'client_secret': self.intent.client_secret
+            'client_secret': self.intent.client_secret,
+            'google_api_key': self.google_api_key,
         }
         return context
 
