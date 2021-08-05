@@ -5,12 +5,13 @@ from django.views import View
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
+from django.utils.timezone import make_aware
 from bag.context import bag_contents
 from .forms import OrderForm
-from .models import Order, OrderLineItem, Coupon
+from .models import Order, OrderLineItem, Appointment, Coupon
 from services.models import Service
 from profiles.models import UserProfile
-from datetime import date
+from datetime import date, datetime, timedelta
 import stripe
 import json
 
@@ -125,16 +126,24 @@ class CheckoutView(LoginRequiredMixin, View):
             order.user_profile = profile
             order.save()
 
-            for item_id, item_quantity in bag['services'].items():
+            for item_id, item_data in bag['services'].items():
                 try:
                     service = Service.objects.get(id=item_id)
-                    order_line_item = OrderLineItem(
+                    OrderLineItem.objects.create(
                         order=order,
                         service=service,
-                        quantity=item_quantity,
+                        quantity=item_data['quantity'],
                         size=service.size,
                     )
-                    order_line_item.save()
+                    for appointment in item_data['appointments']:
+                        start_time = make_aware(datetime.strptime(
+                            appointment, '%d/%m/%Y %H:%M'))
+                        end_time = start_time + timedelta(hours=2)
+                        Appointment.objects.create(
+                            order=order,
+                            start=start_time,
+                            end=end_time
+                        )
                 except Service.DoesNotExist:
                     messages.error(request, (
                         "One of the services in your bag wasn't found in \
