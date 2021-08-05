@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
+from django.utils.timezone import make_aware
 from .models import Appointment, Order, OrderLineItem, Coupon
 from services.models import Service
 from profiles.models import UserProfile
@@ -76,7 +77,7 @@ class StripeWH_Handler:
             profile.save()
 
         if coupon:
-            current_date = date.today()
+            current_date = make_aware(date.today())
             coupon_qs = Coupon.objects.get(
                 name=coupon,
                 start_date_gte=current_date,
@@ -140,8 +141,8 @@ class StripeWH_Handler:
                         size=service.size,
                     )
                     for appointment in item_data['appointments']:
-                        start_time = datetime.strptime(
-                            appointment, '%d/%m/%Y %H:%M')
+                        start_time = make_aware(datetime.strptime(
+                            appointment, '%d/%m/%Y %H:%M'))
                         end_time = start_time + timedelta(hours=2)
                         Appointment.objects.create(
                             order=order,
