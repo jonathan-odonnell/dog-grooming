@@ -2,10 +2,10 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
-from .models import Order, OrderLineItem, Coupon
+from .models import Appointment, Order, OrderLineItem, Coupon
 from services.models import Service
 from profiles.models import UserProfile
-from datetime import date
+from datetime import date, datetime, timedelta
 import json
 import time
 
@@ -130,16 +130,24 @@ class StripeWH_Handler:
                     coupon=coupon_qs,
                     stripe_pid=pid,
                 )
-                for item_id, item_quantity in json.loads(
+                for item_id, item_data in json.loads(
                         bag['services']).items():
                     service = Service.objects.get(id=item_id)
-                    order_line_item = OrderLineItem(
+                    OrderLineItem.objects.create(
                         order=order,
                         service=service,
-                        quantity=item_quantity,
+                        quantity=item_data['quantity'],
                         size=service.size,
                     )
-                    order_line_item.save()
+                    for appointment in item_data['appointments']:
+                        start_time = datetime.strptime(
+                            appointment, '%d/%m/%Y %H:%M')
+                        end_time = start_time + timedelta(hours=2)
+                        Appointment.objects.create(
+                            order=order,
+                            start=start_time,
+                            end=end_time
+                        )
             except Exception as e:
                 if order:
                     order.delete()
