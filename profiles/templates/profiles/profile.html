@@ -35,5 +35,13 @@
     </div>
 </section>
 
+{% endblock %}
 
+{% block postloadjs %}
+{{ block.super }}
+<script src="{% static 'js/autocomplete.js' %}"></script>
+<script
+      src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&callback=initAutocomplete&libraries=places&v=weekly"
+      async
+    ></script>
 {% endblock %}

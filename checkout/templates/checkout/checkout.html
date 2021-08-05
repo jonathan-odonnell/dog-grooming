@@ -119,4 +119,9 @@
 {{ stripe_public_key|json_script:"id_stripe_public_key" }}
 {{ client_secret|json_script:"id_client_secret" }}
 <script src="{% static 'js/stripe.js' %}"></script>
+<script src="{% static 'js/autocomplete.js' %}"></script>
+<script
+      src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&callback=initAutocomplete&libraries=places&v=weekly"
+      async
+    ></script>
 {% endblock %}
