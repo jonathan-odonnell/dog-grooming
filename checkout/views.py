@@ -156,7 +156,7 @@ class CheckoutView(LoginRequiredMixin, View):
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
-            context = self.get_context_data(self, form)
+            context = self.get_context_data(form)
             return render(request, self.template_name, context)
 
 
