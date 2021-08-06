@@ -4,8 +4,8 @@ from django.db import models
 class Service(models.Model):
     name = models.CharField(max_length=254)
     image = models.ImageField()
-    size = models.CharField(max_length=2)
     price = models.DecimalField(max_digits=6, decimal_places=2)
+    size = models.CharField(max_length=2)
     description = models.TextField()
     offer = models.BooleanField(default=False)
 
