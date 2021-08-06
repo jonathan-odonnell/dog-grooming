@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <h5 class="card-title fw-bold mb-3">{{ service.name }}</h5>
                     <p class="card-text">{{ service.size }}</p>
-                    <p class="card-text">£{{ service.price|floatformat:"2" }}</p>
+                    <p class="card-text">From £{{ service.price|floatformat:"2" }}</p>
                     <p class="card-text">{{ service.description }}</p>
                     <a href="{% url 'service_appointments' service.id %}" class="btn btn-primary">Book Appointment</a>
                 </div>
