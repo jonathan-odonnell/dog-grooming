@@ -144,11 +144,21 @@ class StripeWH_Handler:
                         start_time = make_aware(datetime.strptime(
                             appointment, '%d/%m/%Y %H:%M'))
                         end_time = start_time + timedelta(hours=2)
-                        Appointment.objects.create(
-                            order=order,
-                            start=start_time,
-                            end=end_time
-                        )
+                        appointment_exists = Appointment.objects.get(
+                            start=start_time, end=end_time).exists()
+                        if not appointment_exists:
+                            Appointment.objects.create(
+                                order=self.object,
+                                start=start_time,
+                                end=end_time
+                            )
+                        else:
+                            if order:
+                                order.delete()
+                            return HttpResponse(
+                                content=f'Webhook received: {event["type"]} | \
+                                    ERROR: Appointment already booked',
+                                status=500)
             except Exception as e:
                 if order:
                     order.delete()

@@ -80,7 +80,7 @@ class CheckoutView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return redirect(reverse(
-                'checkout_success', args=[self.object.order_number]))
+            'checkout_success', args=[self.object.order_number]))
 
     def get(self, request):
         bag = request.session.get('bag', {})
@@ -137,16 +137,23 @@ class CheckoutView(LoginRequiredMixin, CreateView):
                     start_time = make_aware(datetime.strptime(
                         appointment, '%d/%m/%Y %H:%M'))
                     end_time = start_time + timedelta(hours=2)
-                    Appointment.objects.create(
-                        order=self.object,
-                        start=start_time,
-                        end=end_time
-                    )
+                    appointment_exists = Appointment.objects.get(
+                        start=start_time, end=end_time).exists()
+                    if not appointment_exists:
+                        Appointment.objects.create(
+                            order=self.object,
+                            start=start_time,
+                            end=end_time
+                        )
+                    else:
+                        messages.error(self.request,  "Unable to book the appointment you selected. \
+                            Please try again")
+                        return redirect(reverse('service_appointments',
+                                                args=[int(item_id)]))
+
             except Service.DoesNotExist:
-                messages.error(self.request, (
-                    "One of the services in your bag wasn't found in \
+                messages.error(self.request, "One of the services in your bag wasn't found in \
                         our database. Please call us for assistance!")
-                )
                 self.object.delete()
                 return redirect(reverse('bag'))
 
