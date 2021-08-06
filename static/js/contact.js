@@ -14,18 +14,3 @@ $('#contact-form').submit(function (e) {
         });
     }
 });
-
-function initMap() {
-    const location = {
-        lat: 53.3873753,
-        lng: -2.3542039
-    };
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
-        center: location,
-    });
-    new google.maps.Marker({
-        position: location,
-        map: map,
-    });
-}
