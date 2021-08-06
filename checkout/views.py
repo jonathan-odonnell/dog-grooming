@@ -79,8 +79,8 @@ class CheckoutView(LoginRequiredMixin, CreateView):
         return context
 
     def get_success_url(self):
-        return redirect(reverse(
-            'checkout_success', args=[self.object.order_number]))
+        return reverse(
+            'checkout_success', args=[self.object.order_number])
 
     def get(self, request):
         bag = request.session.get('bag', {})
@@ -157,7 +157,7 @@ class CheckoutView(LoginRequiredMixin, CreateView):
                 self.object.delete()
                 return redirect(reverse('bag'))
 
-        return self.get_success_url()
+        return redirect(self.get_success_url())
 
     def form_invalid(self, form):
         messages.error(self.request, 'There was an error with your form. \
