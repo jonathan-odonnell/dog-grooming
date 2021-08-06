@@ -117,13 +117,12 @@ class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Successfully added service!')
-        return redirect(self.success_url)
+        return redirect(self.get_success_url())
 
     def form_invalid(self, form):
         messages.error(self.request, 'Failed to add service. \
             Please ensure the form is valid.')
-        return render(self.request,
-                      self.template_name, self.get_context_data())
+        return self.render_to_response(self.get_context_data())
 
 
 class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
@@ -141,8 +140,7 @@ class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
     def form_invalid(self, form):
         messages.error(self.request, 'Failed to update service. \
             Please ensure the form is valid.')
-        return render(self.request,
-                      self.template_name, self.get_context_data())
+        return self.render_to_response(self.get_context_data())
 
 
 class DeleteServiceView(LoginRequiredMixin, SuperUserRequired, DeleteView):
