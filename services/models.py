@@ -26,7 +26,7 @@ class Price(models.Model):
     size = models.CharField(max_length=2, choices=CHOICES)
 
     def __str__(self):
-        return self.name
+        return f'{self.price} - {self.size}'
 
 
 class Availability(models.Model):
