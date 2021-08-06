@@ -6,7 +6,7 @@ from django_countries.fields import CountryField
 from services.models import Service
 from profiles.models import UserProfile
 from decimal import Decimal
-from datetime import datetime
+from django.utils.timezone import get_current_timezone
 
 
 class Order(models.Model):
@@ -95,9 +95,14 @@ class Appointment(models.Model):
     end = models.DateTimeField()
     comments = models.TextField(null=True, blank=True)
 
+    def convert_to_localtime(self, utctime):
+        fmt = '%d/%m/%Y %H:%M'
+        localtz = utctime.astimezone(get_current_timezone())
+        return localtz.strftime(fmt)
+
     def __str__(self):
-        return f'{datetime.strftime(self.start, "%d/%m/%Y %H:%M:%S")} - '\
-            f'{datetime.strftime(self.end, "%d/%m/%Y %H:%M:%S")}'
+        return f'{self.convert_to_localtime(self.start)} - \
+            {self.convert_to_localtime(self.end)}'
 
 
 class Coupon(models.Model):
@@ -105,6 +110,11 @@ class Coupon(models.Model):
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
+
+    def convert_to_localtime(self, utctime):
+        fmt = '%d/%m/%Y'
+        localtz = utctime.astimezone(get_current_timezone())
+        return localtz.strftime(fmt)
 
     def __str__(self):
         return f'{self.name} {self.start_date} - {self.end_date}'
