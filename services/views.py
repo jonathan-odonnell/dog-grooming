@@ -2,12 +2,12 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.http.response import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.utils.timezone import make_aware, get_current_timezone
-from .models import Service, BusinessHour
+from .models import Service, Availability
 from checkout.models import Appointment
 from .forms import ServiceForm
 from .utils import SuperUserRequired
@@ -59,13 +59,13 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         return context
 
     def get_appointments(self, date):
-        business_hours = BusinessHour.objects.get(
+        availability = Availability.objects.get(
             start_date__lte=date, end_date__gte=date)
         appointments = ['10:00', '13:00', '15:00']
         appointments_start = make_aware(datetime.combine(
-            date, business_hours.start_time))
+            date, availability.start_time))
         appointments_end = make_aware(datetime.combine(
-            date, business_hours.end_time))
+            date, availability.end_time))
         booked_appointments = Appointment.objects.filter(
             start__gte=appointments_start,
             end__lte=appointments_end
@@ -75,8 +75,8 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
             appointment_start = datetime.strptime(appointment, '%H:%M').time()
             appointment_end = (datetime.strptime(
                 appointment, '%H:%M') + timedelta(hours=2)).time()
-            if (appointment_start <= business_hours.start_time
-                    or appointment_end > business_hours.end_time):
+            if (appointment_start <= availability.start_time
+                    or appointment_end > availability.end_time):
                 appointments.remove(appointment)
 
         for appointment in booked_appointments:

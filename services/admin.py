@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Service, BusinessHour
+from .models import Service, Availability
 
 admin.site.register(Service)
-admin.site.register(BusinessHour)
+admin.site.register(Availability)

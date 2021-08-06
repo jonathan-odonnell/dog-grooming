@@ -13,10 +13,9 @@ class Service(models.Model):
         return self.name
 
 
-class BusinessHour(models.Model):
+class Availability(models.Model):
     class Meta:
-        verbose_name = "Business Hours"
-        verbose_name_plural = "Business Hours"
+        verbose_name_plural = "Availability"
 
     start_time = models.TimeField()
     end_time = models.TimeField()
