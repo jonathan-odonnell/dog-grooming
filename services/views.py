@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.db.models import Min
 from django.utils.timezone import make_aware, get_current_timezone
 from .models import Service, Availability
 from checkout.models import Appointment
@@ -17,7 +18,7 @@ from calendar import Calendar
 
 
 class ServicesView(ListView):
-    model = Service
+    queryset = Service.objects.annotate(price=Min('prices__price'))
     context_object_name = 'services'
     template_name = 'services/services.html'
 
