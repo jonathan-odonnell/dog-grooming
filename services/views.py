@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.utils import timezone
+from django.utils.timezone import make_aware, get_current_timezone
 from .models import Service, BusinessHour
 from checkout.models import Appointment
 from .forms import ServiceForm
@@ -62,12 +62,10 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         business_hours = BusinessHour.objects.get(
             start_date__lte=date, end_date__gte=date)
         appointments = ['10:00', '13:00', '15:00']
-        appointments_start = datetime.combine(
-            date, business_hours.start_time).replace(
-            tzinfo=timezone.get_current_timezone())
-        appointments_end = datetime.combine(
-            date, business_hours.end_time).replace(
-            tzinfo=timezone.get_current_timezone())
+        appointments_start = make_aware(datetime.combine(
+            date, business_hours.start_time))
+        appointments_end = make_aware(datetime.combine(
+            date, business_hours.end_time))
         booked_appointments = Appointment.objects.filter(
             start__gte=appointments_start,
             end__lte=appointments_end
@@ -82,9 +80,8 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
                 appointments.remove(appointment)
 
         for appointment in booked_appointments:
-            appointment = timezone.localtime(
-                appointment.start, timezone.get_current_timezone()
-            ).strftime('%H:%M')
+            appointment = appointment.start.astimezone(
+                get_current_timezone()).strftime('%H:%M')
             if appointment in appointments:
                 appointments.remove(appointment)
 
@@ -104,9 +101,8 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
             return self.render_to_response(context)
 
     def post(self, request, pk):
-        date = datetime.strptime(
-            request.POST['date'], '%d/%m/%Y').replace(
-                tzinfo=timezone.get_current_timezone())
+        date = make_aware(datetime.strptime(
+            request.POST['date'], '%d/%m/%Y'))
         appointments = self.get_appointments(date)
         return JsonResponse({'appointments': appointments})
 
