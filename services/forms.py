@@ -1,6 +1,7 @@
 from django import forms
 from .models import Service
 from crispy_forms.helper import FormHelper
+from .widgets import CustomClearableFileInput
 
 
 class ServiceForm(forms.ModelForm):
@@ -23,8 +24,10 @@ class ServiceForm(forms.ModelForm):
             'description': 'Description',
         }
 
+        self.fields['image'].widget = CustomClearableFileInput()
         for field in self.fields:
-            if field != 'offer':
+            if field != 'image' and field != 'offer':
+                print(field)
                 self.fields[field].widget.attrs[
                     'placeholder'] = f'{placeholders[field]} *'
                 self.fields[field].label = False
