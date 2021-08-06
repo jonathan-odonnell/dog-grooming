@@ -12,11 +12,13 @@
         <div class="col-12 col-md-10 col-lg-8 mx-auto">
             <form action="{% url 'edit_service' service.id %}" method="POST">
                 {% csrf_token %}
-                {{ form.name | as_crispy_field }}
-                {{ form.price | as_crispy_field }}
-                {{ form.size | as_crispy_field }}
-                {{ form.description | as_crispy_field }}
-                {{ form.offer | as_crispy_field }}
+                {% for field in form %}
+                    {% if field.name == 'image' %}
+                        {{ field }}
+                    {% else %}
+                        {{ field | as_crispy_field }}
+                    {% endif %}
+                {% endfor %}
                 <div class="text-center">
                     <button type="submit" class="btn btn-secondary">Update Service</button>
                 </div>
