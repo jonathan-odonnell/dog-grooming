@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.deletion import CASCADE
+from django.utils.timezone import get_current_timezone
 
 
 class Service(models.Model):
@@ -21,7 +21,7 @@ class Price(models.Model):
     ]
 
     service = models.ForeignKey(
-        Service, on_delete=CASCADE, related_name='prices')
+        Service, on_delete=models.CASCADE, related_name='prices')
     price = models.DecimalField(max_digits=6, decimal_places=2)
     size = models.CharField(max_length=2, choices=CHOICES)
 
@@ -33,10 +33,14 @@ class Availability(models.Model):
     class Meta:
         verbose_name_plural = "Availability"
 
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    def convert_to_localtime(self, utctime):
+        fmt = '%d/%m/%Y %H:%M'
+        localtz = utctime.astimezone(get_current_timezone())
+        return localtz.strftime(fmt)
 
     def __str__(self):
-        return f'{self.start_date} - {self.end_date}'
+        return f'{self.convert_to_localtime(self.start_time)} - \
+            {self.convert_to_localtime(self.end_time)}'
