@@ -12,13 +12,25 @@
         <div class="col-12 col-md-10 col-lg-8 mx-auto">
             <form action="{% url 'edit_service' service.id %}" method="POST">
                 {% csrf_token %}
-                {% for field in form %}
+                <fieldset class="mb-4">
+                    {% for field in form %}
                     {% if field.name == 'image' %}
-                        {{ field }}
+                    {{ field }}
                     {% else %}
-                        {{ field | as_crispy_field }}
+                    {{ field | as_crispy_field }}
                     {% endif %}
-                {% endfor %}
+                    {% endfor %}
+                </fieldset>
+                <fieldset class="mb-4">
+                    <legend class="mb-3">Prices {{forloop.counter}}</legend>
+                    {{ formset.management_form|crispy }}
+                    {% for form in formset.forms %}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        {% crispy form %}
+                    {% endfor %}
+                </fieldset>
                 <div class="text-center">
                     <button type="submit" class="btn btn-secondary">Update Service</button>
                 </div>
@@ -30,10 +42,10 @@
 
 {% endblock %}
 {% block postloadjs %}
-	{{ block.super }}
-	<script>
-        $('input[type="checkbox"]').addClass('form-check-input');
-        $('input[type="checkbox"]').parent().addClass('form-check');
-        $('.form-check label').addClass('form-check-label');
-    </script>
+{{ block.super }}
+<script>
+    $('input[type="checkbox"]').addClass('form-check-input');
+    $('input[type="checkbox"]').parent().addClass('form-check');
+    $('.form-check label').addClass('form-check-label');
+</script>
 {% endblock %}
