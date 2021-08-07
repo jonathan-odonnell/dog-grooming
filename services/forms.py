@@ -1,7 +1,9 @@
 from django import forms
-from .models import Service
+from .models import Price, Service
 from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Row, Column
 from .widgets import CustomClearableFileInput
+from django.forms.models import inlineformset_factory
 
 
 class ServiceForm(forms.ModelForm):
@@ -19,15 +21,46 @@ class ServiceForm(forms.ModelForm):
         self.helper.field_class = 'mb-3'
         placeholders = {
             'name': 'Name',
-            'price': 'Price',
-            'size': 'Size',
             'description': 'Description',
         }
 
         self.fields['image'].widget = CustomClearableFileInput()
         for field in self.fields:
             if field != 'image' and field != 'offer':
-                print(field)
                 self.fields[field].widget.attrs[
                     'placeholder'] = f'{placeholders[field]} *'
                 self.fields[field].label = False
+
+
+class PriceForm(forms.ModelForm):
+
+    class Meta:
+        model = Price
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        """
+        Adds classes to the form. Code for setting the form_class, field_class
+        and label_class is from
+        https://django-crispy-forms.readthedocs.io/en/latest/form_helper.html
+        """
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column('price', css_class='col'),
+                Column('size', css_class='col'),
+                Column('DELETE', css_class='col-auto'),
+                css_class='row mb-3',
+            )
+        )
+        self.helper.form_tag = False
+
+        for field in self.fields:
+            if field == 'price':
+                self.fields[field].widget.attrs[
+                    'placeholder'] = 'Price *'
+            self.fields[field].label = False
+
+
+PriceFormSet = inlineformset_factory(Service, Price, form=PriceForm, extra=1)
