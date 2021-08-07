@@ -10,7 +10,7 @@ from django.db.models import Min
 from django.utils.timezone import make_aware, get_current_timezone
 from .models import Service, Availability
 from checkout.models import Appointment
-from .forms import ServiceForm
+from .forms import ServiceForm, PriceFormSet
 from .utils import SuperUserRequired
 from datetime import datetime, date, timedelta
 import calendar
@@ -115,10 +115,23 @@ class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
     template_name = 'services/add_service.html'
     success_url = reverse_lazy('services')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = PriceFormSet(self.request.POST)
+        else:
+            context['formset'] = PriceFormSet()
+        return context
+
     def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Successfully added service!')
-        return redirect(self.get_success_url())
+        self.object = form.save()
+        formset = PriceFormSet(self.request.POST, instance=form)
+        if formset.is_valid():
+            formset.save()
+            messages.success(self.request, 'Successfully added service!')
+            return redirect(self.get_success_url())
+        else:
+            return self.form_invalid(formset)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Failed to add service. \
@@ -133,10 +146,23 @@ class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
     template_name = 'services/edit_service.html'
     success_url = reverse_lazy('services')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = PriceFormSet(self.request.POST, instance=self.object)
+        else:
+            context['formset'] = PriceFormSet(instance=self.object)
+        return context
+
     def form_valid(self, form):
-        form.save()
-        messages.success(self.request, 'Successfully updated service!')
-        return redirect(self.get_success_url())
+        self.object = form.save()
+        formset = PriceFormSet(self.request.POST, instance=self.object)
+        if formset.is_valid():
+            formset.save()
+            messages.success(self.request, 'Successfully updated service!')
+            return redirect(self.get_success_url())
+        else:
+            return self.form_invalid(formset)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Failed to update service. \
