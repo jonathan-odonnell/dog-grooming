@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+{% endblock %}
+
 {% block content %}
 
 <section class="container p-4">
@@ -9,8 +13,42 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-12"></div>
+        {% if request.user.is_superuser %}
+        <div class="col-12 mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addImage">
+                <i class="fa fa-plus me-2"></i>
+                <span>Add Image</span>
+            </button>
+        </div>
+        {% endif %}
+        <div class="col-12">
+            <div class="row g-0" data-masonry='{"percentPosition": true }'>
+                {% for item in images %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <img class="img-fluid w-100" src="{{ item.image.url }}" alt="Image of {{ item.name }}">
+                </div>
+                {% endfor %}  
+            </div>
+        </div>
     </div>
 </section>
-
+{% if request.user.is_superuser %}
+<div class="modal fade" id="addImage" tabindex="-1" aria-label="addImage" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title ms-auto ps-3">Add Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'gallery' %}" method="POST" class="modal-body">
+                {{ form.name | as_crispy_field }}
+                {{ form.image }}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
