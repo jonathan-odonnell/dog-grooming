@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Service, Price, Availability
+from .models import Service, Price, Availability, Appointment
 
 
 class PriceAdminInline(admin.StackedInline):
@@ -13,3 +13,4 @@ class ServiceAdmin(admin.ModelAdmin):
 
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Availability)
+admin.site.register(Appointment)
