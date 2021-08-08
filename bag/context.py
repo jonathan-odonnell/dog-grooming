@@ -1,6 +1,6 @@
 from checkout.models import Coupon
 from django.shortcuts import get_object_or_404
-from services.models import Service
+from services.models import Appointment, Service
 from decimal import Decimal
 from datetime import date
 
@@ -18,11 +18,13 @@ def bag_contents(request):
         service = get_object_or_404(Service, id=item_id)
         order_total += item_data['quantity'] * service.price
         item_count += item_data['quantity']
+        appointments = Appointment.objects.filter(
+            id__in=item_data['appointments'])
         services.append({
             'item_id': item_id,
-            'quantity': item_data['quantity'],
-            'appointments': item_data['appointments'],
             'service': service,
+            'quantity': item_data['quantity'],
+            'appointments': appointments,
         })
 
     if coupon:
