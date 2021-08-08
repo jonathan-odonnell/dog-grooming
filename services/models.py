@@ -62,5 +62,5 @@ class Appointment(models.Model):
         return localtz.strftime(fmt)
 
     def __str__(self):
-        return f'{self.convert_to_localtime(self.start)} - \
-            {self.convert_to_localtime(self.end)}'
+        return f'{self.convert_to_localtime(self.start_time)} - \
+            {self.convert_to_localtime(self.end_time)}'
