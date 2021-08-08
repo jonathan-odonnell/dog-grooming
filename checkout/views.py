@@ -9,8 +9,8 @@ from django.conf import settings
 from django.utils.timezone import make_aware
 from bag.context import bag_contents
 from .forms import OrderForm
-from .models import Order, OrderLineItem, Appointment, Coupon
-from services.models import Service
+from .models import Order, OrderLineItem, Coupon
+from services.models import Service, Appointment
 from profiles.models import UserProfile
 from datetime import date, datetime, timedelta
 import stripe

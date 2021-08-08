@@ -1,8 +1,7 @@
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
-from .models import Availability
+from .models import Availability, Appointment
 from datetime import datetime, timedelta
-from checkout.models import Appointment
 
 
 @receiver(pre_save, sender=Availability)

@@ -8,11 +8,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db.models import Min
 from django.utils.timezone import make_aware
-from .models import Service
-from checkout.models import Appointment
+from .models import Service, Appointment
 from .forms import ServiceForm, PriceFormSet
 from .utils import SuperUserRequired
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 import calendar
 from calendar import Calendar
 

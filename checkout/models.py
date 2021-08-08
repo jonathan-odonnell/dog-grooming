@@ -87,24 +87,6 @@ class OrderLineItem(models.Model):
         return f'{self.service.name} on order {self.order.order_number}'
 
 
-class Appointment(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE,
-                              null=True, blank=True,
-                              related_name='appointments')
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-    comments = models.TextField(null=True, blank=True)
-
-    def convert_to_localtime(self, utctime):
-        fmt = '%d/%m/%Y %H:%M'
-        localtz = utctime.astimezone(get_current_timezone())
-        return localtz.strftime(fmt)
-
-    def __str__(self):
-        return f'{self.convert_to_localtime(self.start)} - \
-            {self.convert_to_localtime(self.end)}'
-
-
 class Coupon(models.Model):
     name = models.CharField(max_length=20)
     amount = models.DecimalField(max_digits=6, decimal_places=2)

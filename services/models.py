@@ -44,3 +44,23 @@ class Availability(models.Model):
     def __str__(self):
         return f'{self.convert_to_localtime(self.start_time)} - \
             {self.convert_to_localtime(self.end_time)}'
+
+
+class Appointment(models.Model):
+    order = models.ForeignKey('checkout.Order', on_delete=models.CASCADE,
+                              null=True, blank=True,
+                              related_name='appointments')
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    comments = models.TextField(null=True, blank=True)
+    reserved = models.BooleanField(default=False)
+    confirmed = models.BooleanField(default=False)
+
+    def convert_to_localtime(self, utctime):
+        fmt = '%d/%m/%Y %H:%M'
+        localtz = utctime.astimezone(get_current_timezone())
+        return localtz.strftime(fmt)
+
+    def __str__(self):
+        return f'{self.convert_to_localtime(self.start)} - \
+            {self.convert_to_localtime(self.end)}'
