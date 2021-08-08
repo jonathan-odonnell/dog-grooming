@@ -134,23 +134,16 @@ class CheckoutView(LoginRequiredMixin, CreateView):
                     size=service.size,
                 )
                 for appointment in item_data['appointments']:
-                    start_time = make_aware(datetime.strptime(
-                        appointment, '%d/%m/%Y %H:%M'))
-                    end_time = start_time + timedelta(hours=2)
-                    appointment_exists = Appointment.objects.get(
-                        start=start_time, end=end_time).exists()
-                    if not appointment_exists:
-                        Appointment.objects.create(
-                            order=self.object,
-                            start=start_time,
-                            end=end_time
-                        )
-                    else:
+                    try:
+                        appointment_qs = Appointment.objects.get(
+                            id=appointment, reserved=True, confirmed=False)
+                        appointment_qs.confirmed = True
+                        appointment_qs.save()
+                    except Appointment.DoesNotExist:
                         messages.error(self.request,  "Unable to book the appointment you selected. \
                             Please try again")
                         return redirect(reverse('service_appointments',
                                                 args=[int(item_id)]))
-
             except Service.DoesNotExist:
                 messages.error(self.request, "One of the services in your bag wasn't found in \
                         our database. Please call us for assistance!")

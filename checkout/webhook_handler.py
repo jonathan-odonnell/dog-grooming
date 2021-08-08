@@ -6,7 +6,7 @@ from django.utils.timezone import make_aware
 from services.models import Service, Appointment
 from .models import Order, OrderLineItem, Coupon
 from profiles.models import UserProfile
-from datetime import date, datetime, timedelta
+from datetime import date
 import json
 import time
 
@@ -141,24 +141,10 @@ class StripeWH_Handler:
                         size=service.size,
                     )
                     for appointment in item_data['appointments']:
-                        start_time = make_aware(datetime.strptime(
-                            appointment, '%d/%m/%Y %H:%M'))
-                        end_time = start_time + timedelta(hours=2)
-                        appointment_exists = Appointment.objects.get(
-                            start=start_time, end=end_time).exists()
-                        if not appointment_exists:
-                            Appointment.objects.create(
-                                order=self.object,
-                                start=start_time,
-                                end=end_time
-                            )
-                        else:
-                            if order:
-                                order.delete()
-                            return HttpResponse(
-                                content=f'Webhook received: {event["type"]} | \
-                                    ERROR: Appointment already booked',
-                                status=500)
+                        appointment_qs = Appointment.objects.get(
+                            id=appointment, reserved=True, confirmed=False)
+                        appointment_qs.confirmed = True
+                        appointment_qs.save()
             except Exception as e:
                 if order:
                     order.delete()
