@@ -1,4 +1,4 @@
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -33,3 +33,14 @@ class GalleryView(CreateView):
         messages.error(self.request, 'Failed to add service. \
             Please ensure the form is valid.')
         return self.render_to_response(self.get_context_data())
+
+
+class DeleteImageView(DeleteView):
+    model = Image
+    success_url = reverse_lazy('gallery')
+    http_method_names = ['post']
+
+    def form_valid(self, form):
+        self.object.delete()
+        messages.success(self.request, 'Successfully deleted image!')
+        return redirect(self.get_success_url())
