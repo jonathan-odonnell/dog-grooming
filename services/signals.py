@@ -10,12 +10,15 @@ def delete_appointments_on_save(sender, instance, **kwargs):
     """
     Update order total on lineitem update/create
     """
-    availability = Availability.objects.get(id=instance.id)
-    Appointment.objects.filter(
-        start__gte=availability.end_time,
-        end__lte=availability.end_time,
-        order=None
-    ).delete()
+    try:
+        availability = Availability.objects.get(id=instance.id)
+        Appointment.objects.get(
+            start_time__gte=availability.end_time,
+            end_time__lte=availability.end_time,
+            order=None
+        ).delete()
+    except Availability.DoesNotExist:
+        pass
 
 
 @receiver(post_save, sender=Availability)
@@ -33,4 +36,5 @@ def add_appointments_on_save(sender, instance, **kwargs):
                 appointment, '%H:%M').time())
             end_time = datetime.combine(date, datetime.strptime(
                 appointment, '%H:%M').time()) + timedelta(hours=2)
-            Appointment.objects.get_or_create(start=start_time, end=end_time)
+            Appointment.objects.get_or_create(
+                start_time=start_time, end_time=end_time)
