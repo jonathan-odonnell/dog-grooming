@@ -34,4 +34,4 @@ def add_appointments_on_save(sender, instance, **kwargs):
                 appointment, '%H:%M').time())
             end_time = datetime.combine(date, datetime.strptime(
                 appointment, '%H:%M').time()) + timedelta(hours=2)
-            # Appointment.objects.create(start=start_time, end=end_time)
+            Appointment.objects.get_or_create(start=start_time, end=end_time)
