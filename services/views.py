@@ -7,8 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db.models import Min
-from django.utils.timezone import make_aware, get_current_timezone
-from .models import Service, Availability
+from django.utils.timezone import make_aware
+from .models import Service
 from checkout.models import Appointment
 from .forms import ServiceForm, PriceFormSet
 from .utils import SuperUserRequired
@@ -34,7 +34,7 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
 
         if not month:
             current_date = date.today()
-            day = current_date.day
+            day = current_date.day + 1
             month = current_date.month
             year = current_date.year
 
@@ -60,33 +60,12 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         return context
 
     def get_appointments(self, date):
-        availability = Availability.objects.get(
-            start_date__lte=date, end_date__gte=date)
-        appointments = ['10:00', '13:00', '15:00']
-        appointments_start = make_aware(datetime.combine(
-            date, availability.start_time))
-        appointments_end = make_aware(datetime.combine(
-            date, availability.end_time))
-        booked_appointments = Appointment.objects.filter(
-            start__gte=appointments_start,
-            end__lte=appointments_end
-        )
-
+        available_appointments = []
+        appointments = Appointment.objects.filter(
+            start__date__gte=date, end__date__lte=date, order=None)
         for appointment in appointments:
-            appointment_start = datetime.strptime(appointment, '%H:%M').time()
-            appointment_end = (datetime.strptime(
-                appointment, '%H:%M') + timedelta(hours=2)).time()
-            if (appointment_start <= availability.start_time
-                    or appointment_end > availability.end_time):
-                appointments.remove(appointment)
-
-        for appointment in booked_appointments:
-            appointment = appointment.start.astimezone(
-                get_current_timezone()).strftime('%H:%M')
-            if appointment in appointments:
-                appointments.remove(appointment)
-
-        return appointments
+            available_appointments.append(appointment.start.strftime('%H:%M'))
+        return available_appointments
 
     def get(self, request, pk, month=None, year=None):
         self.object = self.get_object()
