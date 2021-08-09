@@ -15,6 +15,7 @@ class BagView(TemplateView):
 
 class AddServiceToBagView(View):
     """ Add the specified service to the shopping bag """
+    http_method_names = ['post']
 
     def post(self, request, item_id):
         service = get_object_or_404(Service, id=item_id)
@@ -64,6 +65,7 @@ class AddServiceToBagView(View):
 
 class RemoveServiceFromBagView(View):
     """ Removes the specified service from the shopping bag """
+    http_method_names = ['post']
 
     def post(self, request, item_id):
         try:
