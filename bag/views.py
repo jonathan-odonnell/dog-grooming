@@ -2,6 +2,8 @@ from django.urls.base import reverse
 from django.views.generic.base import View, TemplateView
 from django.shortcuts import redirect, get_object_or_404, HttpResponse
 from django.contrib import messages
+from django.http.response import JsonResponse
+from django.template.loader import render_to_string
 from services.models import Service, Appointment
 from datetime import datetime
 from django.utils.timezone import make_aware
@@ -65,7 +67,6 @@ class RemoveServiceFromBagView(View):
 
     def post(self, request, item_id):
         try:
-            service = get_object_or_404(Service, id=item_id)
             bag = request.session.get('bag', {})
             size = request.POST['size']
             appointment = int(request.POST['appointment'])
@@ -83,12 +84,9 @@ class RemoveServiceFromBagView(View):
             appointment.reserved = False
             appointment.save()
 
-            messages.success(
-                request, f'Removed {service.name} for {size} \
-                    dog from your bag')
             request.session['bag'] = bag
-            return HttpResponse(status=200)
-
+            bag_content = render_to_string('bag/bag-content.html')
+            return JsonResponse({'bag_content': bag_content})
         except Exception as e:
             messages.error(request, f'Error removing item: {e}')
             return HttpResponse(status=500)
