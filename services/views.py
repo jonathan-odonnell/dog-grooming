@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db.models import Min
-from django.utils.timezone import make_aware
+from django.utils.timezone import make_aware, localtime
 from .models import Service, Appointment
 from .forms import ServiceForm, AppointmentForm, PriceFormSet
 from .utils import SuperUserRequired
@@ -65,7 +65,7 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
             start_time__date__gte=date, end_time__date__lte=date, order=None)
         for appointment in appointments:
             available_appointments.append(
-                appointment.start_time.strftime('%H:%M'))
+                localtime(appointment.start_time).strftime('%H:%M'))
         return available_appointments
 
     def get(self, request, pk, month=None, year=None):
