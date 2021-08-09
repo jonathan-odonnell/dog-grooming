@@ -43,10 +43,10 @@ class AddServiceToBagView(View):
                     messages.success(
                         request, f'Added {service.name} for {size} dog to bag')
             else:
-                bag['services'][item_id] = {
+                bag['services'][item_id] = {size: {
                     'quantity': 1,
                     'appointments': [appointment.id]
-                }
+                }}
                 messages.success(
                     request, f'Added {service.name} for {size} dog to bag')
 
