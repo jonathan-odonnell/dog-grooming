@@ -62,7 +62,8 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
     def get_appointments(self, date):
         available_appointments = []
         appointments = Appointment.objects.filter(
-            start_time__date__gte=date, end_time__date__lte=date, order=None)
+            start_time__date__gte=date,
+            end_time__date__lte=date, reserved=False)
         for appointment in appointments:
             available_appointments.append(
                 localtime(appointment.start_time).strftime('%H:%M'))
@@ -129,7 +130,8 @@ class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
-            context['formset'] = PriceFormSet(self.request.POST, instance=self.object)
+            context['formset'] = PriceFormSet(
+                self.request.POST, instance=self.object)
         else:
             context['formset'] = PriceFormSet(instance=self.object)
         return context
