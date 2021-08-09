@@ -15,7 +15,7 @@
     </div>
     {% if services %}
     {% for item in services %}
-    <div class="row d-md-none">
+    <div class="row d-md-none service-{{item.item_id}}">
         <div class="col-4 mb-2">
             {% include "bag/service-image.html" %}
         </div>
@@ -24,7 +24,7 @@
             <p class="my-0"><strong>Price:</strong> £{{ item.price.price }}</p>
         </div>
         <div class="col-12 offset-4 order-sm-last">
-            <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}">
+            <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-appointment="{{ item.appointment.id}}">
                 <small>Remove</small>
             </a>
         </div>
@@ -41,7 +41,7 @@
                 </tr>
             </thead>
             {% for item in services %}
-            <tr>
+            <tr class="service-{{item.item_id}}">
                 <td class="p-3 w-25">
                     {% include "bag/service-image.html" %}
                 </td>
@@ -52,7 +52,7 @@
                     <p class="my-0">£{{ item.price.price }}</p>
                 </td>
                 <td class="py-3">
-                    <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}">
+                    <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-appointment="{{ item.appointment.id}}">
                         <small>Remove</small>
                     </a>
                 </td>
@@ -90,5 +90,20 @@
     {% endif %}
 </section>
 
-
+{% endblock %}
+{% block postloadjs %}
+{{ block.super }}
+<script>
+    $('.remove-item').click(function(e) {
+        var csrfToken = "{{ csrf_token }}";
+        var itemId = $(this).attr('id').split('remove_')[1];
+        var appointmentId = $(this).data('appointment');
+        var url = `/bag/remove/service/${itemId}/`;
+        var postData = {'csrfmiddlewaretoken': csrfToken, 'appointment': appointmentId};
+        $.post(url, postData)
+         .done(function() {
+             $(`.service-${itemId}`).remove()
+         });
+    })
+</script>
 {% endblock %}
