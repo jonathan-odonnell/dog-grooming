@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.db.models import Min
 from django.utils.timezone import make_aware
 from .models import Service, Appointment
-from .forms import ServiceForm, PriceFormSet
+from .forms import ServiceForm, AppointmentForm, PriceFormSet
 from .utils import SuperUserRequired
 from datetime import datetime, date
 import calendar
@@ -56,14 +56,16 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         context['classes'] = classes
         context['month'] = calendar.month_name[month]
         context['year'] = year
+        context['form'] = AppointmentForm()
         return context
 
     def get_appointments(self, date):
         available_appointments = []
         appointments = Appointment.objects.filter(
-            start__date__gte=date, end__date__lte=date, order=None)
+            start_time__date__gte=date, end_time__date__lte=date, order=None)
         for appointment in appointments:
-            available_appointments.append(appointment.start.strftime('%H:%M'))
+            available_appointments.append(
+                appointment.start_time.strftime('%H:%M'))
         return available_appointments
 
     def get(self, request, pk, month=None, year=None):
