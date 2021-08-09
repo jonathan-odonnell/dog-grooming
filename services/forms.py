@@ -72,8 +72,8 @@ class AppointmentForm(forms.Form):
         ('L', 'Large'),
         ('XL', 'Extra Large'),
     ]
-    appointments = forms.ChoiceField(choices=APPOINTMENT_CHOICES)
-    sizes = forms.ChoiceField(choices=SIZE_CHOICES)
+    appointment = forms.ChoiceField(choices=APPOINTMENT_CHOICES)
+    size = forms.ChoiceField(choices=SIZE_CHOICES)
     comments = forms.CharField(required=False, widget=forms.Textarea())
 
     def __init__(self, *args, **kwargs):
