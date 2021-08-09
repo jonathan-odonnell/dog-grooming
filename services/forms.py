@@ -63,4 +63,35 @@ class PriceForm(forms.ModelForm):
             self.fields[field].label = False
 
 
+class AppointmentForm(forms.Form):
+    APPOINTMENT_CHOICES = [('', 'Time *'), ]
+    SIZE_CHOICES = [
+        ('', 'Dog Size *'),
+        ('S', 'Small'),
+        ('M', 'Medium'),
+        ('L', 'Large'),
+        ('XL', 'Extra Large'),
+    ]
+    appointments = forms.ChoiceField(choices=APPOINTMENT_CHOICES)
+    sizes = forms.ChoiceField(choices=SIZE_CHOICES)
+    comments = forms.CharField(widget=forms.Textarea())
+
+    def __init__(self, *args, **kwargs):
+        """
+        Add placeholders and classes andremove auto-generated
+        labels
+        """
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.field_class = 'mb-3'
+        self.fields['comments'].widget.attrs = {
+            'placeholder': 'Comments *',
+            'rows': '8',
+        }
+        for field in self.fields:
+            if field != 'comments':
+                self.fields[field].widget.attrs['class'] = 'form-select'
+            self.fields[field].label = False
+
+
 PriceFormSet = inlineformset_factory(Service, Price, form=PriceForm, extra=1)
