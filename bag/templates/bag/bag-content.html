@@ -1,0 +1,89 @@
+{% if services %}
+<div class="row g-0">
+    <div class="col-12">
+        <p class="text-muted mb-5">A summary of your bag contents is below</p>
+    </div>
+</div>
+{% for item in services %}
+<div class="row g-0 d-md-none">
+    <div class="col-4 mb-2">
+        {% include "bag/service-image.html" %}
+    </div>
+    <div class="col-8 mb-2">
+        {% include "bag/service-info.html" %}
+        <p class="my-0"><strong>Price:</strong> £{{ item.price.price }}</p>
+    </div>
+    <div class="col-12 offset-4 mb-2">
+        <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-size="{{ item.price.size }}"
+            data-appointment="{{ item.appointment.id}}">
+            <small>Remove</small>
+        </a>
+    </div>
+    <div class="col-12">
+        <hr>
+    </div>
+</div>
+{% endfor %}
+<div class="row g-0">
+    <div class="col-12">
+        <div class="table-responsive rounded d-none d-md-block">
+            <table class="table table-sm table-borderless">
+                <thead class="text-black">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Service Info</th>
+                        <th scope="col">Price</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                {% for item in services %}
+                <tr>
+                    <td class="p-3 w-25">
+                        {% include "bag/service-image.html" %}
+                    </td>
+                    <td class="py-3 w-50">
+                        {% include "bag/service-info.html" %}
+                    </td>
+                    <td class="py-3">
+                        <p class="my-0">£{{ item.price.price }}</p>
+                    </td>
+                    <td class="py-3">
+                        <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}"
+                            data-size="{{ item.price.size }}" data-appointment="{{ item.appointment.id}}">
+                            <small>Remove</small>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="5" class="pt-5 text-end">
+                        {% include "bag/bag-total.html" %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-end">
+                        <a href="{% url 'services' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-chevron-left me-2"></i>
+                            <span class="text-uppercase">Keep Shopping</span>
+                        </a>
+                        <a href="{% url 'checkout' %}" class="btn btn-secondary">
+                            <span class="text-uppercase">Secure Checkout</span>
+                            <i class="fas fa-lock ms-2"></i>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row g-0">
+    <div class="col-12">
+        <p class="lead mb-5">Your bag is empty.</p>
+        <a href="{% url 'services' %}" class="btn btn-outline-secondary btn-lg">
+            <i class="fas fa-chevron-left me-2"></i>
+            <span class="text-uppercase">Keep Shopping</span>
+        </a>
+    </div>
+</div>
+{% endif %}
