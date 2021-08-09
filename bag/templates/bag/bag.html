@@ -33,6 +33,8 @@
         $.post(url, postData)
          .done(function(res) {
              $(`#bag-content`).html(res.bag_content)
+         }).fail(function() {
+            location.reload();
          });
     })
 </script>
