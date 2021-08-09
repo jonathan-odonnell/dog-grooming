@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="row">
-        <div id="calendar" class="col-12 col-lg-6 mx-auto">
+        <div id="calendar" class="col-12 col-md-10 col-lg-8 mx-auto">
             <div class="d-flex justify-content-between mb-2">
                 <button id="prev-month" class="btn ms-3" disabled>
                     <i class="fas fa-chevron-left"></i>
@@ -47,9 +47,17 @@
                 </tbody>
             </table>
         </div>
-        <form id="appointments" action="{% url 'add_service_to_bag' service.id %}" method="post">
-            {% csrf_token %}
-        </form>
+        <div class="col-12 col-md-10 col-lg-8 mx-auto mt-4">
+            <form id="appointments" action="{% url 'add_service_to_bag' service.id %}" method="POST">
+                {% csrf_token %}
+                {{ form.appointments | as_crispy_field }}
+                {{ form.sizes | as_crispy_field }}
+                {{ form.comments | as_crispy_field }}
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
 
     </div>
 </section>
