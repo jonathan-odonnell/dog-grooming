@@ -71,6 +71,7 @@ class OrderLineItem(models.Model):
                               related_name='order_lineitems')
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     size = models.CharField(max_length=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
     quantity = models.IntegerField(null=False, blank=False, default=0)
     lineitem_total = models.DecimalField(max_digits=6, decimal_places=2,
                                          editable=False)
@@ -80,8 +81,7 @@ class OrderLineItem(models.Model):
         Override the original save method to set the lineitem total
         and update the order total.
         """
-        prices = self.service.prices.get(size=self.size)
-        self.lineitem_total = prices.price * self.quantity
+        self.lineitem_total = self.price * self.quantity
         super().save(*args, **kwargs)
 
     def __str__(self):
