@@ -47,8 +47,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-12 col-md-10 col-lg-8 mx-auto mt-4">
-            <form id="appointments" action="{% url 'add_service_to_bag' service.id %}" method="POST">
+        <div class="col-12 col-md-10 col-lg-8 mx-auto mt-4 d-none">
+            <form id="appointments-form" action="{% url 'add_service_to_bag' service.id %}" method="POST">
                 {% csrf_token %}
                 {{ form.appointments | as_crispy_field }}
                 {{ form.sizes | as_crispy_field }}
@@ -58,7 +58,6 @@
                 </div>
             </form>
         </div>
-
     </div>
 </section>
 
@@ -195,14 +194,15 @@
             csrfmiddlewaretoken: csrfToken,
             date: date.toLocaleDateString(),
         };
-        $('#appointments .btn').remove();
         $.post(window.location, postData).done(function (res) {
+            $('#id_appointments option:gt(0)').remove()
             let html = '';
             for (let i in res.appointments) {
                 let appointmentTime = `${postData.date} ${res.appointments[i]}`
-                html += `<button type="submit" class="btn btn-primary" name="appointment" value="${appointmentTime}">${res.appointments[i]}</button>`;
+                html += `<option value="${appointmentTime}">${res.appointments[i]}</option>`;
             }
-            $('#appointments').append(html);
+            $('#id_appointments').append(html);
+            $('#appointments-form').parent().removeClass('d-none');
         });
     });
 </script>
