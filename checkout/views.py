@@ -10,9 +10,9 @@ from django.utils.timezone import make_aware
 from bag.context import bag_contents
 from .forms import OrderForm
 from .models import Order, OrderLineItem, Coupon
-from services.models import Service, Appointment
+from services.models import Service, Price, Appointment
 from profiles.models import UserProfile
-from datetime import date, datetime, timedelta
+from datetime import date
 import stripe
 import json
 
@@ -125,30 +125,34 @@ class CheckoutView(LoginRequiredMixin, CreateView):
         self.object.save()
 
         for item_id, item_data in bag['services'].items():
-            try:
-                service = Service.objects.get(id=item_id)
-                OrderLineItem.objects.create(
-                    order=self.object,
-                    service=service,
-                    quantity=item_data['quantity'],
-                    size=service.size,
-                )
-                for appointment in item_data['appointments']:
-                    try:
-                        appointment_qs = Appointment.objects.get(
-                            id=appointment, reserved=True, confirmed=False)
-                        appointment_qs.confirmed = True
-                        appointment_qs.save()
-                    except Appointment.DoesNotExist:
-                        messages.error(self.request,  "Unable to book the appointment you selected. \
-                            Please try again")
-                        return redirect(reverse('service_appointments',
-                                                args=[int(item_id)]))
-            except Service.DoesNotExist:
-                messages.error(self.request, "One of the services in your bag wasn't found in \
-                        our database. Please call us for assistance!")
-                self.object.delete()
-                return redirect(reverse('bag'))
+            for size, size_data in item_data.items():
+                try:
+                    service = Service.objects.get(id=item_id)
+                    prices = Price.objects.get(service=service, size=size)
+                    OrderLineItem.objects.create(
+                        order=self.object,
+                        service=service,
+                        size=size,
+                        price=prices.price,
+                        quantity=size_data['quantity'],
+                    )
+                    for appointment in size_data['appointments']:
+                        try:
+                            appointment_qs = Appointment.objects.get(
+                                id=appointment, reserved=True, confirmed=False)
+                            appointment_qs.order = self.object
+                            appointment_qs.confirmed = True
+                            appointment_qs.save()
+                        except Appointment.DoesNotExist:
+                            messages.error(self.request,  "Unable to book the appointment you selected. \
+                                Please try again")
+                            return redirect(reverse('service_appointments',
+                                                    args=[int(item_id)]))
+                except Service.DoesNotExist:
+                    messages.error(self.request, "One of the services in your bag wasn't found in \
+                            our database. Please call us for assistance!")
+                    self.object.delete()
+                    return redirect(reverse('bag'))
 
         return redirect(self.get_success_url())
 
