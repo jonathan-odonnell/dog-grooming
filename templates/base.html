@@ -56,27 +56,30 @@
                         {% endif %}
                     </a>
                     <div class="dropdown-menu dropdown-menu-end bag-dropdown-wrapper" aria-labelledby="bag-dropdown">
-                        {% for item in services %}
-                        <div class="row">
-                            <div class="col-3 my-1">
-                                {% if item.service.image %}
-                                <img class="w-100" src="{{ item.service.image.url }}" alt="{{ item.service.name }}" />
-                                {% else %}
-                                <img class="w-100" src="{{ MEDIA_URL }}noimage.png" alt="{{ item.service.name }}" />
-                                {% endif %}
+                        <div class="services-wrapper">
+                            {% for item in services %}
+                            <div class="row g-0">
+                                <div class="col-3 mt-1">
+                                    {% if item.service.image %}
+                                    <img class="w-100" src="{{ item.service.image.url }}"
+                                        alt="{{ item.service.name }}" />
+                                    {% else %}
+                                    <img class="w-100" src="{{ MEDIA_URL }}noimage.png" alt="{{ item.service.name }}" />
+                                    {% endif %}
+                                </div>
+                                <div class="col-9 text-end">
+                                    <p class="my-0"><strong>{{ item.service.name }}</strong></p>
+                                    <p class="my-0 small">
+                                        Dog Size: {{ item.item_price.size|upper }}
+                                    </p>
+                                    <p class="my-0 small text-muted">Qty: {{ item.quantity }}</p>
+                                </div>
+                                <div class="col-12">
+                                    <hr>
+                                </div>
                             </div>
-                            <div class="col-9 text-end">
-                                <p class="my-0"><strong>{{ item.service.name }}</strong></p>
-                                <p class="my-0 small">
-                                    Dog Size: {{ item.item_price.size|upper }}
-                                </p>
-                                <p class="my-0 small text-muted">Qty: {{ item.quantity }}</p>
-                            </div>
-                            <div class="col-12">
-                                <hr>
-                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
                         <div class="row">
                             <div class="col">
                                 <strong>

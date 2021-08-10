@@ -104,7 +104,10 @@
     width: 300px;
     padding: 1rem;
     margin-top: 0.5rem !important;
-    max-height: 250px;
+}
+
+.services-wrapper {
+    max-height: 220px;
     overflow-y: scroll;
 }
 
