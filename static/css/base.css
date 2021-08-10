@@ -83,6 +83,31 @@
     cursor: pointer;
 }
 
+.dropdown-toggle:after {
+    content: none;
+}
+
+#bag-dropdown i {
+    font-size: 30px;
+}
+
+.item-count {
+    position: absolute;
+    top: 18px;
+    left: 19px;
+    width: 20px;
+    height: 15px;
+    line-height: 1;
+}
+
+.bag-dropdown-wrapper {
+    width: 300px;
+    padding: 1rem;
+    margin-top: 0.5rem !important;
+    max-height: 250px;
+    overflow-y: scroll;
+}
+
 @media (min-width: 992px) {
     #map {
         height: 100%;
