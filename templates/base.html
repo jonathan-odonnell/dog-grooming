@@ -13,6 +13,9 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
         integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.1.1/css/hover-min.css"
+        integrity="sha512-SJw7jzjMYJhsEnN/BuxTWXkezA2cRanuB8TdCNMXFJjxG9ZGSKOX5P3j03H6kdMxalKHZ7vlBMB4CagFP/de0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% endblock %}
 
@@ -45,21 +48,19 @@
                 </button>
                 <a class="navbar-brand" href="{% url 'home' %}">Navbar Brand</a>
                 <div class="dropdown order-lg-3">
-                    <a class="btn dropdown-toggle nav-link shadow-none position-relative" href="#" role="button" id="bag-dropdown"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="btn dropdown-toggle nav-link shadow-none position-relative" href="#" role="button"
+                        id="bag-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-shopping-bag text-dark"></i>
                         {% if item_count > 0%}
-                            <span class="item-count bg-dark text-light">{{item_count}}</span>
+                        <span class="item-count bg-dark text-light">{{item_count}}</span>
                         {% endif %}
                     </a>
-                    <div class="dropdown-menu dropdown-menu-end bag-dropdown-wrapper"
-                        aria-labelledby="bag-dropdown">
+                    <div class="dropdown-menu dropdown-menu-end bag-dropdown-wrapper" aria-labelledby="bag-dropdown">
                         {% for item in services %}
                         <div class="row">
                             <div class="col-3 my-1">
                                 {% if item.service.image %}
-                                <img class="w-100" src="{{ item.service.image.url }}"
-                                    alt="{{ item.service.name }}" />
+                                <img class="w-100" src="{{ item.service.image.url }}" alt="{{ item.service.name }}" />
                                 {% else %}
                                 <img class="w-100" src="{{ MEDIA_URL }}noimage.png" alt="{{ item.service.name }}" />
                                 {% endif %}
@@ -113,6 +114,38 @@
 
     {% block content %}
     {% endblock %}
+
+    <footer class="footer-wrapper bg-light">
+        <div class="container text-center p-4">
+            <div class="row social-media mb-3">
+                <div class="col-3">
+                    <a class="hvr-grow" href="https://www.facebook.com" target="_blank">
+                        <i class="fab fa-facebook-f fa-lg"></i>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a class="hvr-grow" href="https://www.twitter.com" target="_blank">
+                        <i class="fab fa-twitter fa-lg"></i>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a class="hvr-grow" href="https://www.youtube.com" target="_blank">
+                        <i class="fab fa-youtube fa-lg"></i>
+                    </a>
+                </div>
+                <div class="col-3">
+                    <a class="hvr-grow" href="https://www.instagram.com" target="_blank">
+                        <i class="fab fa-instagram fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <small>&copy; 2021</small>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     {% block postloadjs %}
     {% endblock %}

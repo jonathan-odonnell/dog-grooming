@@ -108,6 +108,20 @@
     overflow-y: scroll;
 }
 
+.footer-wrapper {
+    color: #777777;
+}
+
+.social-media i {
+    color: #777777;
+}
+
+.hvr-grow:active,
+.hvr-grow:focus,
+.hvr-grow:hover {
+    transform: scale(1.2);
+}
+
 @media (min-width: 992px) {
     #map {
         height: 100%;
