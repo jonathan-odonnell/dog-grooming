@@ -45,7 +45,7 @@ def bag_contents(request):
     grand_total = Decimal(order_total - discount)
 
     context = {
-        'services': services,
+        'bag_services': services,
         'order_total': order_total,
         'coupon': coupon,
         'discount': discount,
