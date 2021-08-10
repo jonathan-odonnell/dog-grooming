@@ -5,7 +5,7 @@
     </div>
 </div>
 <div class="d-md-none">
-    {% for item in services %}
+    {% for item in bag_services %}
     {% for appointment in item.appointments %}
     <div class="row g-0">
         <div class="col-4 mb-2">
@@ -55,7 +55,7 @@
                         <th scope="col"></th>
                     </tr>
                 </thead>
-                {% for item in services %}
+                {% for item in bag_services %}
                 {% for appointment in item.appointments %}
                 <tr>
                     <td class="p-3 w-25">
