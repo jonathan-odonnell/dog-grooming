@@ -20,15 +20,17 @@ def bag_contents(request):
             price = get_object_or_404(Price, service=service, size=size)
             order_total += item_data[size]['quantity'] * price.price
             item_count += item_data[size]['quantity']
+            appointments = []
             for appointment in size_data['appointments']:
                 appointment = get_object_or_404(Appointment, id=appointment)
-                services.append({
-                    'item_id': item_id,
-                    'service': service,
-                    'price': price,
-                    'quantity': item_data[size]['quantity'],
-                    'appointment': appointment,
-                })
+                appointments.append(appointment)
+            services.append({
+                'item_id': item_id,
+                'service': service,
+                'price': price,
+                'quantity': item_data[size]['quantity'],
+                'appointments': appointments,
+            })
 
     if coupon:
         current_date = date.today()
