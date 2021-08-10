@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load checkout_tools %}
 
 {% block content %}
 
@@ -30,7 +31,7 @@
 					<p class="my-0 small text-muted">Qty: {{ item.quantity }}</p>
 				</div>
 				<div class="col-3 text-right">
-					<p class="my-0 small text-muted">£{{ item.price.price }}</p>
+					<p class="my-0 small text-muted">£{{ item.price.price | calc_subtotal:item.quantity }}</p>
 				</div>
 			</div>
             <hr class="my-0">
