@@ -27,7 +27,7 @@ def bag_contents(request):
             services.append({
                 'item_id': item_id,
                 'service': service,
-                'price': price,
+                'item_price': price,
                 'quantity': item_data[size]['quantity'],
                 'appointments': appointments,
             })
