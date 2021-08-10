@@ -13,7 +13,7 @@
         </div>
         <div class="col-8 mb-2">
             {% include "bag/service-info.html" %}
-            <p class="my-0"><strong>Price:</strong> £{{ item.price.price }}</p>
+            <p class="my-0"><strong>Price:</strong> £{{ item.item_price.price }}</p>
         </div>
         <div class="col-12 offset-4 mb-2">
             <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}"
@@ -65,7 +65,7 @@
                         {% include "bag/service-info.html" %}
                     </td>
                     <td class="py-3">
-                        <p class="my-0">£{{ item.price.price }}</p>
+                        <p class="my-0">£{{ item.item_price.price }}</p>
                     </td>
                     <td class="py-3">
                         <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}"
