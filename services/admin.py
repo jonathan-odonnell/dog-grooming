@@ -11,6 +11,10 @@ class ServiceAdmin(admin.ModelAdmin):
     inlines = (PriceAdminInline,)
 
 
+class AppointmentAdmin(admin.ModelAdmin):
+    readonly_fields = ('last_updated',)
+
+
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Availability)
-admin.site.register(Appointment)
+admin.site.register(Appointment, AppointmentAdmin)
