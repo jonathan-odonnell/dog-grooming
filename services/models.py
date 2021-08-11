@@ -55,6 +55,7 @@ class Appointment(models.Model):
     comments = models.TextField(null=True, blank=True)
     reserved = models.BooleanField(default=False)
     confirmed = models.BooleanField(default=False)
+    last_updated = models.DateTimeField(null=True, blank=True)
 
     def convert_to_localtime(self, utctime):
         fmt = '%d/%m/%Y %H:%M'
