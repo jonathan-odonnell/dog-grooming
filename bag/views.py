@@ -29,6 +29,7 @@ class AddServiceToBagView(View):
                 start_time=start_time, reserved=False)
             appointment.reserved = True
             appointment.comments = request.POST['comments']
+            appointment.last_updated = make_aware(datetime.now())
             appointment.save()
 
             if item_id in list(bag['services'].keys()):
@@ -84,6 +85,7 @@ class RemoveServiceFromBagView(View):
             appointment = Appointment.objects.get(id=appointment)
             appointment.comments = None
             appointment.reserved = False
+            appointment.last_updated = None
             appointment.save()
 
             request.session['bag'] = bag
