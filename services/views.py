@@ -7,11 +7,11 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db.models import Min
-from django.utils.timezone import make_aware, localtime
+from django.utils.timezone import make_aware, localdate, localtime, now
 from .models import Service, Appointment
 from .forms import ServiceForm, AppointmentForm, PriceFormSet
 from .utils import SuperUserRequired
-from datetime import datetime, date
+from datetime import date, datetime
 import calendar
 from calendar import Calendar
 
@@ -32,7 +32,7 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         day = 1
 
         if not month:
-            current_date = date.today()
+            current_date = localdate(now())
             day = current_date.day + 1
             month = current_date.month
             year = current_date.year
