@@ -6,7 +6,7 @@ from django.http.response import JsonResponse
 from django.template.loader import render_to_string
 from services.models import Service, Appointment
 from datetime import datetime
-from django.utils.timezone import make_aware
+from django.utils.timezone import make_aware, localtime, now
 
 
 class BagView(TemplateView):
@@ -29,7 +29,7 @@ class AddServiceToBagView(View):
                 start_time=start_time, reserved=False)
             appointment.reserved = True
             appointment.comments = request.POST['comments']
-            appointment.last_updated = make_aware(datetime.now())
+            appointment.last_updated = localtime(now())
             appointment.save()
 
             if item_id in list(bag['services'].keys()):
