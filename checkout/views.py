@@ -6,13 +6,12 @@ from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
-from django.utils.timezone import make_aware
+from django.utils.timezone import localtime, now, localdate
 from bag.context import bag_contents
 from .forms import OrderForm
 from .models import Order, OrderLineItem, Coupon
 from services.models import Service, Price, Appointment
 from profiles.models import UserProfile
-from datetime import date, datetime
 import stripe
 import json
 
@@ -102,7 +101,7 @@ class CheckoutView(LoginRequiredMixin, CreateView):
         profile = UserProfile.objects.get(user=request.user)
 
         if coupon:
-            current_date = make_aware(date.today())
+            current_date = localdate(now())
             coupon_qs = get_object_or_404(
                 Coupon,
                 name=coupon,
@@ -142,8 +141,7 @@ class CheckoutView(LoginRequiredMixin, CreateView):
                                 id=appointment, reserved=True, confirmed=False)
                             appointment_qs.order = self.object
                             appointment_qs.confirmed = True
-                            appointment.last_updated = make_aware(
-                                datetime.now())
+                            appointment.last_updated = localtime(now())
                             appointment_qs.save()
                         except Appointment.DoesNotExist:
                             messages.error(self.request,  "Unable to book the appointment you selected. \
@@ -167,7 +165,7 @@ class CheckoutView(LoginRequiredMixin, CreateView):
 class AddCouponView(View):
     def post(self, request):
         try:
-            current_date = date.today()
+            current_date = localdate(now())
             coupon = Coupon.objects.get(
                 name=request.POST['coupon'],
                 start_date__gte=current_date,
