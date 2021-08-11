@@ -6,9 +6,8 @@ from django.utils.timezone import make_aware
 from services.models import Service, Price, Appointment
 from .models import Order, OrderLineItem, Coupon
 from profiles.models import UserProfile
-from datetime import date
+from datetime import datetime, date, time
 import json
-import time
 
 
 class StripeWH_Handler:
@@ -148,6 +147,7 @@ class StripeWH_Handler:
                                 id=appointment, reserved=True, confirmed=False)
                             appointment_qs.order = order
                             appointment_qs.confirmed = True
+                            appointment.last_updated = make_aware(datetime.now())
                             appointment_qs.save()
             except Exception as e:
                 if order:

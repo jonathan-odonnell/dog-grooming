@@ -12,7 +12,7 @@ from .forms import OrderForm
 from .models import Order, OrderLineItem, Coupon
 from services.models import Service, Price, Appointment
 from profiles.models import UserProfile
-from datetime import date
+from datetime import date, datetime
 import stripe
 import json
 
@@ -142,6 +142,8 @@ class CheckoutView(LoginRequiredMixin, CreateView):
                                 id=appointment, reserved=True, confirmed=False)
                             appointment_qs.order = self.object
                             appointment_qs.confirmed = True
+                            appointment.last_updated = make_aware(
+                                datetime.now())
                             appointment_qs.save()
                         except Appointment.DoesNotExist:
                             messages.error(self.request,  "Unable to book the appointment you selected. \
