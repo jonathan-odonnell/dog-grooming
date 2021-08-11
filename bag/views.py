@@ -73,23 +73,22 @@ class RemoveServiceFromBagView(View):
             bag = request.session.get('bag', {})
             size = request.POST['size']
             appointment = int(request.POST['appointment'])
+            bag['services'][item_id][size]['quantity'] -= 1
+            bag['services'][item_id][size]['appointments'].remove(appointment)
 
-            if len(list(bag['services'][item_id].keys())) == 1:
-                bag['services'].pop(item_id)
-            elif bag['services'][item_id][size]['quantity'] == 1:
+            if bag['services'][item_id][size]['quantity'] == 0:
                 bag['services'][item_id].pop(size)
-            else:
-                bag['services'][item_id][size]['quantity'] -= 1
-                bag['services'][item_id]['appointments'].remove(appointment)
+
+            if not bag['services'][item_id]:
+                bag['services'].pop(item_id)
 
             appointment = Appointment.objects.get(id=appointment)
             appointment.comments = None
             appointment.reserved = False
             appointment.last_updated = None
             appointment.save()
-
             request.session['bag'] = bag
-            bag_content = render_to_string('bag/bag-content.html')
+            bag_content = render_to_string('bag/bag-content.html', {}, request)
             return JsonResponse({'bag_content': bag_content})
         except Exception as e:
             messages.error(request, f'Error removing item: {e}')
