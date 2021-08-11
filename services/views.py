@@ -155,9 +155,9 @@ class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
 class DeleteServiceView(LoginRequiredMixin, SuperUserRequired, DeleteView):
     model = Service
     success_url = reverse_lazy('services')
-    http_method_names = ['POST']
+    http_method_names = ['get']
 
-    def form_valid(self, form):
+    def get(self, request, pk):
         self.object.delete()
-        messages.success(self.request, 'Successfully deleted service!')
+        messages.success(request, 'Successfully deleted service!')
         return redirect(self.get_success_url())

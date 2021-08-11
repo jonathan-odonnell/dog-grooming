@@ -38,9 +38,9 @@ class GalleryView(CreateView):
 class DeleteImageView(DeleteView):
     model = Image
     success_url = reverse_lazy('gallery')
-    http_method_names = ['post']
+    http_method_names = ['get']
 
-    def form_valid(self, form):
+    def get(self, request, pk):
         self.object.delete()
-        messages.success(self.request, 'Successfully deleted image!')
+        messages.success(request, 'Successfully deleted image!')
         return redirect(self.get_success_url())
