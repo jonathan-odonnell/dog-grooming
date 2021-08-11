@@ -24,4 +24,5 @@ def update_appointments_on_delete(sender, instance, **kwargs):
     """
     Update appointment on order delete
     """
-    instance.appointments.update(reserved=False, confirmed=False)
+    instance.appointments.update(
+        reserved=False, confirmed=False, last_updated=None)
