@@ -6,6 +6,7 @@ from django.core.mail import send_mass_mail
 from django.conf import settings
 from .models import NewsletterEmail
 from .forms import NewsletterEmailForm
+from services.utils import SuperUserRequired
 
 
 class HomeView(TemplateView):
@@ -16,7 +17,7 @@ class HomeView(TemplateView):
         return HttpResponse(status=200)
 
 
-class NewsletterEmailView(FormView):
+class NewsletterEmailView(SuperUserRequired, FormView):
     form_class = NewsletterEmailForm
     template_name = 'home/newsletter-email.html'
     success_url = reverse_lazy('home')
