@@ -187,6 +187,11 @@ STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
 STRIPE_WH_SECRET = os.environ.get('STRIPE_WH_SECRET', '')
 
 
+# Google
+
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', '')
+
+
 # Email
 
 if 'DEVELOPMENT' in os.environ:
@@ -202,6 +207,15 @@ else:
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASS')
     DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 
-# Google
 
-GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', '')
+# SMS
+
+if 'DEVELOPMENT' in os.environ:
+    SMS_BACKEND = 'sms.backends.console.SmsBackend'
+    DEFAULT_FROM_SMS = ''
+
+else:
+    SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
+    TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
+    TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
+    DEFAULT_FROM_SMS = ''
