@@ -18,12 +18,20 @@ class Migration(migrations.Migration):
             model_name='availability',
             name='start_date',
         ),
-        migrations.AlterField(
+        migrations.RemoveField(
+            model_name='availability',
+            name='end_time',
+        ),
+        migrations.RemoveField(
+            model_name='availability',
+            name='start_time',
+        ),
+        migrations.AddField(
             model_name='availability',
             name='end_time',
             field=models.DateTimeField(),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='availability',
             name='start_time',
             field=models.DateTimeField(),
