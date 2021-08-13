@@ -66,7 +66,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'dog_groming.urls'
+ROOT_URLCONF = 'dog_grooming.urls'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -115,7 +115,7 @@ ACCOUNT_FORMS = {
     'login': 'profiles.forms.LoginForm'
 }
 
-WSGI_APPLICATION = 'dog_groming.wsgi.application'
+WSGI_APPLICATION = 'dog_grooming.wsgi.application'
 
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_AGE = 1800
