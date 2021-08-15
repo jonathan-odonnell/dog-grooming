@@ -20,6 +20,7 @@ class PetsView(LoginRequiredMixin, ListView):
 
 class AddPetView(LoginRequiredMixin, CreateView):
     """ Adds a pet """
+    model = Pet
     form_class = PetForm
     template_name = 'pets/add_pet.html'
     success_url = reverse_lazy('pets')
@@ -39,6 +40,7 @@ class AddPetView(LoginRequiredMixin, CreateView):
 
 class EditPetView(LoginRequiredMixin, UpdateView):
     """ Edits a pet """
+    model = Pet
     form_class = PetForm
     context_object_name = 'pet'
     template_name = 'pets/edit_pet.html'
@@ -60,6 +62,7 @@ class EditPetView(LoginRequiredMixin, UpdateView):
 class DeletePetView(LoginRequiredMixin, DeleteView):
     """ Deletes the pet """
     http_method_names = ['get']
+    model = Pet
     form_class = PetForm
     success_url = reverse_lazy('pets')
 
