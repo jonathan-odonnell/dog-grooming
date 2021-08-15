@@ -50,7 +50,7 @@ class OrdersView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Order.objects.filter(
-            user_profile=self.request.user.userprofile)
+            user_profile=self.request.user.userprofile).order_by('-date')
 
 
 class OrderDetailsView(LoginRequiredMixin, DetailView):
