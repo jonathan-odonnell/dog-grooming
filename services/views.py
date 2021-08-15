@@ -95,7 +95,6 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
 class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
     model = Service
     form_class = ServiceForm
-    context_object_name = 'service'
     template_name = 'services/add_service.html'
     success_url = reverse_lazy('services')
 
