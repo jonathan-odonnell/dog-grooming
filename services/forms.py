@@ -64,19 +64,11 @@ class PriceForm(forms.ModelForm):
 
 
 class AppointmentForm(forms.Form):
-    APPOINTMENT_CHOICES = [('', 'Time *'), ]
-    SIZE_CHOICES = [
-        ('', 'Dog Size *'),
-        ('S', 'Small'),
-        ('M', 'Medium'),
-        ('L', 'Large'),
-        ('XL', 'Extra Large'),
-    ]
-    appointment = forms.ChoiceField(choices=APPOINTMENT_CHOICES)
-    size = forms.ChoiceField(choices=SIZE_CHOICES)
+    appointment_choices = [('', 'Time *'), ]
+    appointment = forms.ChoiceField(choices=appointment_choices)
     comments = forms.CharField(required=False, widget=forms.Textarea())
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, pets, *args, **kwargs):
         """
         Add placeholders and classes andremove auto-generated
         labels
@@ -84,8 +76,10 @@ class AppointmentForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.field_class = 'mb-3'
+        pet_choices = [('', 'Pet *')] + [(p.id, p.name) for p in pets]
+        self.fields['pets'] = forms.ChoiceField(choices=pet_choices)
         self.fields['comments'].widget.attrs = {
-            'placeholder': 'Comments *',
+            'placeholder': 'Comments',
             'rows': '8',
         }
         for field in self.fields:
