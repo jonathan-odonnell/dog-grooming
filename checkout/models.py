@@ -70,7 +70,7 @@ class OrderLineItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE,
                               related_name='order_lineitems')
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    size = models.CharField(max_length=2)
+    size = models.CharField(max_length=20)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     quantity = models.IntegerField(null=False, blank=False, default=0)
     lineitem_total = models.DecimalField(max_digits=6, decimal_places=2,
