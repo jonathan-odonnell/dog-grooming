@@ -11,7 +11,7 @@ from .forms import PetForm
 class PetsView(LoginRequiredMixin, ListView):
     """ Displays the user's pets. """
     context_object_name = 'pets'
-    template_name = 'profiles/pets.html'
+    template_name = 'pets/pets.html'
 
     def get_queryset(self):
         return Pet.objects.filter(
@@ -21,7 +21,7 @@ class PetsView(LoginRequiredMixin, ListView):
 class AddPetView(LoginRequiredMixin, CreateView):
     """ Adds a pet """
     form_class = PetForm
-    template_name = 'profiles/add_pet.html'
+    template_name = 'pets/add_pet.html'
     success_url = reverse_lazy('pets')
 
     def form_valid(self, form):
@@ -41,7 +41,7 @@ class EditPetView(LoginRequiredMixin, UpdateView):
     """ Edits a pet """
     form_class = PetForm
     context_object_name = 'pet'
-    template_name = 'profiles/edit_pet.html'
+    template_name = 'pets/edit_pet.html'
     success_url = reverse_lazy('pets')
 
     def form_valid(self, form):
