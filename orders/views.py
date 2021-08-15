@@ -7,7 +7,7 @@ from .models import Order
 class OrdersView(LoginRequiredMixin, ListView):
     """ Display the user's orders. """
     context_object_name = 'orders'
-    template_name = 'profiles/orders.html'
+    template_name = 'orders/orders.html'
 
     def get_queryset(self):
         return Order.objects.filter(
