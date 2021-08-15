@@ -16,6 +16,9 @@ class Breed(models.Model):
     def __str__(self):
         return self.name
 
+    def get_size(self):
+        return self.dog_size
+
 
 class Pet(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
