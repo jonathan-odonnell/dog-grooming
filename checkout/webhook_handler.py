@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils.timezone import make_aware
 from services.models import Service, Price, Appointment
-from .models import Order, OrderLineItem, Coupon
+from orders.models import Order, OrderLineItem, Coupon
 from profiles.models import UserProfile
 from datetime import datetime, date, time
 import json

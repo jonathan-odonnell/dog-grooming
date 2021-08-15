@@ -1,4 +1,4 @@
-from checkout.models import Coupon
+from orders.models import Coupon
 from django.shortcuts import get_object_or_404
 from services.models import Appointment, Service, Price
 from decimal import Decimal

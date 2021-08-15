@@ -8,8 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from django.utils.timezone import localtime, now, localdate
 from bag.context import bag_contents
-from .forms import OrderForm
-from .models import Order, OrderLineItem, Coupon
+from orders.forms import OrderForm
+from orders.models import Order, OrderLineItem, Coupon
 from services.models import Service, Price, Appointment
 from profiles.models import UserProfile
 import stripe
