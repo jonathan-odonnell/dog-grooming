@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.db.models import Min
 from django.utils.timezone import make_aware, localdate, localtime, now
 from .models import Service, Appointment
+from pets.models import Pet
 from .forms import ServiceForm, AppointmentForm, PriceFormSet
 from .utils import SuperUserRequired
 from datetime import date, datetime
@@ -52,11 +53,13 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
             else:
                 classes.append('disabled')
 
+        pets = Pet.objects.filter(user_profile=self.request.user.userprofile)
+
         context['calendar'] = Calendar(6).monthdayscalendar(year, month)
         context['classes'] = classes
         context['month'] = calendar.month_name[month]
         context['year'] = year
-        context['form'] = AppointmentForm()
+        context['form'] = AppointmentForm(pets)
         return context
 
     def get_appointments(self, date):
