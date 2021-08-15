@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'home',
     'profiles',
+    'pets',
     'services',
     'gallery',
     'contact',
