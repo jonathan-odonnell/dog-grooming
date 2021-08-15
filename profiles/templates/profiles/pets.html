@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="container p-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="text-center text-uppercase font-weight-bold">Pets</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-10 col-lg-8 mx-auto">
+            <div class="table-responsive">
+                <table class="table table-sm table-borderless">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Breed</th>
+                            <th></th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pet in pets %}
+                            <tr>
+                                <td>{{ pet.name }}</td>
+                                <td>{{ pet.breed.name }}</td>
+                                <td></td>
+                                <td>
+                                    <a class="text-info pe-3" href="{% url 'edit_pet' pet.id %}">
+                                        <i class="fas fa-edit"></i>
+                                    </a> 
+                                    <a class="text-danger" href="{% url 'delete_pet' pet.id %}">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
