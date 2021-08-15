@@ -14,16 +14,16 @@ class Service(models.Model):
 
 class Price(models.Model):
     CHOICES = [
-        ('S', 'Small'),
-        ('M', 'Medium'),
-        ('L', 'Large'),
-        ('XL', 'Extra Large'),
+        ('Small', 'Small'),
+        ('Medium', 'Medium'),
+        ('Large', 'Large'),
+        ('Extra Large', 'Extra Large'),
     ]
 
     service = models.ForeignKey(
         Service, on_delete=models.CASCADE, related_name='prices')
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    size = models.CharField(max_length=2, choices=CHOICES)
+    dog_size = models.CharField(max_length=20, choices=CHOICES)
 
     def __str__(self):
         return f'{self.price} - {self.size}'
