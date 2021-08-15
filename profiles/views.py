@@ -1,12 +1,10 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView
-from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.conf import settings
 from .models import UserProfile
-from checkout.models import Order
 from .forms import UserProfileForm
 
 
@@ -41,28 +39,3 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         messages.error(
             self.request, 'Update failed. Please ensure the form is valid.')
         return self.render_to_response(self.get_context_data(form=form))
-
-
-class OrdersView(LoginRequiredMixin, ListView):
-    """ Display the user's orders. """
-    context_object_name = 'orders'
-    template_name = 'profiles/orders.html'
-
-    def get_queryset(self):
-        return Order.objects.filter(
-            user_profile=self.request.user.userprofile).order_by('-date')
-
-
-class OrderDetailsView(LoginRequiredMixin, DetailView):
-    """ Displays the user's orders. """
-    context_object_name = 'order'
-    template_name = 'checkout/checkout_success.html'
-
-    def get_object(self):
-        return get_object_or_404(
-            Order, order_number=self.kwargs['order_number'])
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['from_orders'] = True
-        return context
