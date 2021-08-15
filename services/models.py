@@ -47,7 +47,7 @@ class Availability(models.Model):
 
 
 class Appointment(models.Model):
-    order = models.ForeignKey('checkout.Order', on_delete=models.SET_NULL,
+    order = models.ForeignKey('orders.Order', on_delete=models.SET_NULL,
                               null=True, blank=True,
                               related_name='appointments')
     start_time = models.DateTimeField()
