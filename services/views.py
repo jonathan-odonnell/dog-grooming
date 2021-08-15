@@ -11,7 +11,7 @@ from django.utils.timezone import make_aware, localdate, localtime, now
 from .models import Service, Appointment
 from pets.models import Pet
 from .forms import ServiceForm, AppointmentForm, PriceFormSet
-from .utils import SuperUserRequired
+from .utils import SuperUserRequiredMixin
 from datetime import date, datetime
 import calendar
 from calendar import Calendar
@@ -92,7 +92,7 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         return JsonResponse({'appointments': appointments})
 
 
-class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
+class AddServiceView(LoginRequiredMixin, SuperUserRequiredMixin, CreateView):
     model = Service
     form_class = ServiceForm
     template_name = 'services/add_service.html'
@@ -122,7 +122,7 @@ class AddServiceView(LoginRequiredMixin, SuperUserRequired, CreateView):
         return self.render_to_response(self.get_context_data())
 
 
-class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
+class EditServiceView(LoginRequiredMixin, SuperUserRequiredMixin, UpdateView):
     model = Service
     form_class = ServiceForm
     context_object_name = 'service'
@@ -154,7 +154,8 @@ class EditServiceView(LoginRequiredMixin, SuperUserRequired, UpdateView):
         return self.render_to_response(self.get_context_data())
 
 
-class DeleteServiceView(LoginRequiredMixin, SuperUserRequired, DeleteView):
+class DeleteServiceView(LoginRequiredMixin,
+                        SuperUserRequiredMixin, DeleteView):
     model = Service
     success_url = reverse_lazy('services')
     http_method_names = ['get']
