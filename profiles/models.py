@@ -40,6 +40,7 @@ class Breed(models.Model):
 
 
 class Pet(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
     breed = models.ForeignKey(
         Breed, null=True, blank=True, on_delete=models.SET_NULL)
