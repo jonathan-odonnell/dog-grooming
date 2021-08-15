@@ -4,6 +4,7 @@ from django.shortcuts import redirect, get_object_or_404, HttpResponse
 from django.contrib import messages
 from django.http.response import JsonResponse
 from django.template.loader import render_to_string
+from pets.models import Pet
 from services.models import Service, Appointment
 from datetime import datetime
 from django.utils.timezone import make_aware, localtime, now
@@ -20,7 +21,7 @@ class AddServiceToBagView(View):
     def post(self, request, item_id):
         service = get_object_or_404(Service, id=item_id)
         bag = request.session.get('bag', {'services': {}})
-        size = request.POST['size']
+        size = Pet.objects.get(id=request.POST['pet']).get_size()
         start_time = make_aware(datetime.strptime(
             request.POST['appointment'], '%d/%m/%Y %H:%M'))
 
