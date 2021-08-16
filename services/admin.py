@@ -12,7 +12,7 @@ class ServiceAdmin(admin.ModelAdmin):
 
 
 class AppointmentAdmin(admin.ModelAdmin):
-    readonly_fields = ('last_updated',)
+    readonly_fields = ('task_id', 'last_updated',)
 
 
 admin.site.register(Service, ServiceAdmin)
