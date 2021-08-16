@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'crispy_forms',
     'phonenumber_field',
+    'django_dramatiq',
     'home',
     'services',
     'gallery',
@@ -221,12 +222,30 @@ else:
 
 # SMS
 
+DEFAULT_FROM_SMS = ''
+
 if 'DEVELOPMENT' in os.environ:
     SMS_BACKEND = 'sms.backends.console.SmsBackend'
-    DEFAULT_FROM_SMS = ''
 
 else:
     SMS_BACKEND = 'sms.backends.twilio.SmsBackend'
     TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
     TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
-    DEFAULT_FROM_SMS = ''
+
+REDIS_URL = os.environ.get('REDISTOGO_URL', 'redis://localhost:6379')
+
+DRAMATIQ_BROKER = {
+    "BROKER": "dramatiq.brokers.redis.RedisBroker",
+    "OPTIONS": {
+        "url": REDIS_URL,
+    },
+    "MIDDLEWARE": [
+        "dramatiq.middleware.Prometheus",
+        "dramatiq.middleware.AgeLimit",
+        "dramatiq.middleware.TimeLimit",
+        "dramatiq.middleware.Callbacks",
+        "dramatiq.middleware.Retries",
+        "django_dramatiq.middleware.AdminMiddleware",
+        "django_dramatiq.middleware.DbConnectionsMiddleware",
+    ]
+}
