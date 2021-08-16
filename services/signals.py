@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 @receiver(pre_delete, sender=Availability)
 def delete_appointments_on_save(sender, instance, **kwargs):
     """
-    Update order total on lineitem update/create
+    Deletes appointments on availability create/update
     """
     try:
         availability = Availability.objects.get(id=instance.id)
@@ -24,7 +24,7 @@ def delete_appointments_on_save(sender, instance, **kwargs):
 @receiver(post_save, sender=Availability)
 def add_appointments_on_save(sender, instance, **kwargs):
     """
-    Update order total on lineitem update/create
+    Generates appointments on availability create/update
     """
     appointments = ['10:00', '13:00', '15:00']
     time_delta = instance.end_time - instance.start_time
@@ -38,3 +38,15 @@ def add_appointments_on_save(sender, instance, **kwargs):
                 appointment, '%H:%M').time()) + timedelta(hours=2)
             Appointment.objects.get_or_create(
                 start_time=start_time, end_time=end_time)
+
+
+@receiver(post_save, sender=Appointment)
+def update_appointment_on_save(sender, instance, **kwargs):
+    """
+    Update appointment task id on update
+    """
+    if instance.task_id:
+        instance.task_id = instance.cancel_task()
+
+    if instance.confirmed:
+        instance.task_id = instance.schedule_reminder()
