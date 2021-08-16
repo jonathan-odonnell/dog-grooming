@@ -27,7 +27,7 @@ class AddServiceToBagView(View):
 
         try:
             appointment = Appointment.objects.get(
-                start_time=start_time, reserved=False)
+                start_time=start_time, confirmed=False)
             appointment.reserved = True
             appointment.comments = request.POST['comments']
             appointment.last_updated = localtime(now())

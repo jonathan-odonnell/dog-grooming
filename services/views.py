@@ -64,9 +64,9 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
 
     def get_appointments(self, date):
         available_appointments = []
-        appointments = Appointment.objects.filter(
+        appointments = Appointment.objects.available_appointments().filter(
             start_time__date__gte=date,
-            end_time__date__lte=date, reserved=False)
+            end_time__date__lte=date, confirmed=False)
         for appointment in appointments:
             available_appointments.append(
                 localtime(appointment.start_time).strftime('%H:%M'))
