@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.timezone import localtime, now
 from django.conf import settings
 from datetime import timedelta
-from .tasks import send_sms_reminder
 import redis
 
 
@@ -82,12 +81,12 @@ class Appointment(models.Model):
             {self.convert_to_localtime(self.end_time)}'
 
     def schedule_reminder(self):
+        from .tasks import send_sms_reminder
         appointment_time = localtime(self.start_time)
         reminder_time = appointment_time - timedelta(minutes=30)
         current_time = localtime(now())
         milli_to_wait = int(
             (reminder_time - current_time).total_seconds()) * 1000
-
         result = send_sms_reminder.send_with_options(
             args=(self.pk,),
             delay=milli_to_wait)
