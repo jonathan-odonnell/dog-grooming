@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.timezone import localtime, now
+from django.conf import settings
 from datetime import timedelta
+from .tasks import send_sms_reminder
+import redis
 
 
 class Service(models.Model):
@@ -77,3 +80,21 @@ class Appointment(models.Model):
     def __str__(self):
         return f'{self.convert_to_localtime(self.start_time)} - \
             {self.convert_to_localtime(self.end_time)}'
+
+    def schedule_reminder(self):
+        appointment_time = localtime(self.start_time)
+        reminder_time = appointment_time - timedelta(minutes=30)
+        current_time = localtime(now())
+        milli_to_wait = int(
+            (reminder_time - current_time).total_seconds()) * 1000
+
+        result = send_sms_reminder.send_with_options(
+            args=(self.pk,),
+            delay=milli_to_wait)
+
+        return result.options['redis_message_id']
+
+    def cancel_task(self):
+        redis_client = redis.Redis(host=settings.REDIS_LOCAL, port=6379, db=0)
+        redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)
+        return
