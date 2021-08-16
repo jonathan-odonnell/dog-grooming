@@ -1,5 +1,6 @@
 from django.db import models
-from django.utils.timezone import get_current_timezone
+from django.utils.timezone import localtime, now
+from datetime import timedelta
 
 
 class Service(models.Model):
@@ -38,7 +39,7 @@ class Availability(models.Model):
 
     def convert_to_localtime(self, utctime):
         fmt = '%d/%m/%Y %H:%M'
-        localtz = utctime.astimezone(get_current_timezone())
+        localtz = localtime(utctime)
         return localtz.strftime(fmt)
 
     def __str__(self):
@@ -46,7 +47,16 @@ class Availability(models.Model):
             {self.convert_to_localtime(self.end_time)}'
 
 
+class AppointmentManager(models.Manager):
+    def available_appointments(self):
+        current_time = localtime(now())
+        return self.filter(models.Q(
+            last_updated__gte=current_time+timedelta(days=1))
+            | models.Q(last_updated__isnull=True))
+
+
 class Appointment(models.Model):
+    objects = AppointmentManager()
     order = models.ForeignKey('orders.Order', on_delete=models.SET_NULL,
                               null=True, blank=True,
                               related_name='appointments')
@@ -59,7 +69,7 @@ class Appointment(models.Model):
 
     def convert_to_localtime(self, utctime):
         fmt = '%d/%m/%Y %H:%M'
-        localtz = utctime.astimezone(get_current_timezone())
+        localtz = localtime(utctime)
         return localtz.strftime(fmt)
 
     def __str__(self):
