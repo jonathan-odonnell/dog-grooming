@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models.signals import post_save
@@ -27,8 +27,12 @@ class UserProfile(models.Model):
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     """
-    Create or update the user profile
+    Create or update the user profile and adds permissions
+    if user has been created
     """
     if created:
+        if instance.is_superuser:
+            permissions = Permission.objects.all()
+            instance.user_permissions.add(permissions)
         UserProfile.objects.create(user=instance)
         instance.userprofile.save()
