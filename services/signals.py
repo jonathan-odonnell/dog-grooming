@@ -38,15 +38,3 @@ def add_appointments_on_save(sender, instance, **kwargs):
                 appointment, '%H:%M').time()) + timedelta(hours=2)
             Appointment.objects.get_or_create(
                 start_time=start_time, end_time=end_time)
-
-
-@receiver(post_save, sender=Appointment)
-def update_appointment_on_save(sender, instance, **kwargs):
-    """
-    Update appointment task id on update
-    """
-    if instance.task_id:
-        instance.task_id = instance.cancel_task()
-
-    if instance.confirmed:
-        instance.task_id = instance.schedule_reminder()
