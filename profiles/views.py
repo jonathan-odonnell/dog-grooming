@@ -4,6 +4,7 @@ from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.conf import settings
+from allauth.account.models import EmailAddress
 from .models import UserProfile
 from .forms import UserProfileForm
 
@@ -30,8 +31,12 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        self.object.user.email = self.request.POST['email_address']
-        self.object.user.save()
+        current_email = EmailAddress.objects.get(user=self.request.user)
+        new_email = self.request.POST['email_address']
+
+        if current_email.email != new_email:
+            current_email.change(self.request, new_email)
+
         messages.success(self.request, 'Profile updated successfully')
         return redirect(self.get_success_url())
 
