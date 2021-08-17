@@ -93,11 +93,12 @@ class Appointment(models.Model):
         return result.options['redis_message_id']
 
     def cancel_task(self):
-        redis_client = redis.Redis(host=settings.REDIS_LOCAL, port=6379, db=0)
+        redis_client = redis.Redis.from_url(settings.REDIS_URL, db=0)
         redis_client.hdel("dramatiq:default.DQ.msgs", self.task_id)
         return
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         if self.task_id:
             self.task_id = self.cancel_task()
         if self.confirmed:
