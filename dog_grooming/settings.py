@@ -44,10 +44,8 @@ INSTALLED_APPS = [
     'cloudinary',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
     'crispy_forms',
     'phonenumber_field',
-    'django_dramatiq',
     'home',
     'services',
     'gallery',
@@ -232,10 +230,12 @@ else:
     TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
     TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
 
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.redis.RedisBroker",
     "OPTIONS": {
-        "url": os.environ.get('REDIS_URL', 'redis://localhost:6379'),
+        "url": REDIS_URL,
     },
     "MIDDLEWARE": [
         "dramatiq.middleware.Prometheus",
