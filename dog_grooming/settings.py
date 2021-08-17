@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'crispy_forms',
     'phonenumber_field',
+    'django_dramatiq',
     'home',
     'services',
     'gallery',
@@ -243,7 +244,6 @@ DRAMATIQ_BROKER = {
         "dramatiq.middleware.TimeLimit",
         "dramatiq.middleware.Callbacks",
         "dramatiq.middleware.Retries",
-        "django_dramatiq.middleware.AdminMiddleware",
         "django_dramatiq.middleware.DbConnectionsMiddleware",
     ]
 }
