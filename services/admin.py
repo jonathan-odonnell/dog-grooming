@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Service, Price, Availability, Appointment
+from django_dramatiq.models import Task
 
 
 class PriceAdminInline(admin.StackedInline):
@@ -18,3 +19,4 @@ class AppointmentAdmin(admin.ModelAdmin):
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Availability)
 admin.site.register(Appointment, AppointmentAdmin)
+admin.site.unregister(Task)
