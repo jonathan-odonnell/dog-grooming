@@ -53,6 +53,216 @@
                 {{ form.appointment | as_crispy_field }}
                 {{ form.pets | as_crispy_field }}
                 {{ form.comments | as_crispy_field }}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="id_terms_and_conditions" required>
+                    <label class="form-check-label" for="id_terms_and_conditions">
+                        I have read and agree to the <a href="javascript:void(0)" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">Terms of Service</a>.
+                    </label>
+                </div>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-label="Terms of Service"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Terms of Service</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <article>
+                                    <h5>Appointments</h5>
+                                    <h6>Appointments</h6>
+                                    <p class="small">All Grooming services are strictly on an appointment only basis and
+                                        as
+                                        such your
+                                        woofer will receive my undivided attention throughout their groom. I use Hownd
+                                        products, that are made for dogs and are “cruelty free, planet friendly and
+                                        don’t
+                                        contain any junk ingredients”.</p>
+                                    <p class="small">By making an appointment, dog owners are verifying that their dogs
+                                        are
+                                        up to date
+                                        the their annual vaccinations.</p>
+                                    <h6>New Clients</h6>
+                                    <p class="small">At the time of booking your appointment, new clients will be
+                                        required
+                                        to complete a Grooming Record Card. This information is purely for our purposes
+                                        and
+                                        all of our records are held confidentially.</p>
+                                    <h6>Pre Groom Consultation</h6>
+                                    <p class="small">Your first appointment will include a consultation to discuss your
+                                        requirements; considering the breed, coat type and your lifestyle. This is
+                                        included
+                                        within your appointment so no need to arrive early, but please be prepared for
+                                        lots
+                                        of questions, and if you have a particular style in mind bring along photos!</p>
+                                    <h6>Cancellation</h6>
+                                    <p class="small">
+
+                                        We understand that life can be spontaneous and that you may need to occasionally
+                                        cancel your dogs appointment, we respectfully request to be given as much notice
+                                        as
+                                        possible. As a small business late cancellations and no shows have a detrimental
+                                        effect on us. Our booking system will send appointment reminders, cancellation
+                                        charges are as follows:
+                                        <ul class="small">
+                                            <li>More than 24 hours notice – no charge</li>
+                                            <li>Less than 24 hours notice – 50% of fee</li>
+                                            <li>No shows - full fee is non refundable</li>
+                                        </ul>
+                                    </p>
+                                    <h6>Time keeping</h6>
+                                    <p class="small">As the salon operates on an appointments only basis, the business
+                                        of
+                                        WGW only works if clients can drop off and pick up at the specified appointment
+                                        times. This ensures all of my clients receive the same level of individual care
+                                        and
+                                        attention. If you are running late, please call in the first instance and we
+                                        will do
+                                        our best to accommodate you.</p>
+                                    <h6>Refusal of Service</h6>
+                                    <p class="small">WGW has the right to refuse any services at any time. In the event
+                                        that
+                                        your animal is unwell, too stressed or becomes aggressive and dangerous to
+                                        groom,
+                                        WGW has the right to refuse grooming services, stop grooming services or cancel
+                                        grooming services at any time before, during or after the appointment. The
+                                        client
+                                        will be charged a fee that is proportionate to the work completed.</p>
+                                    <h6>Photography</h6>
+                                    <p class="small">We take photographs of your dog whilst they are in our care. The
+                                        images
+                                        will be included within your client records and some may be used to showcase our
+                                        work on social media or used in advertising material. Consent for which is
+                                        deemed to
+                                        be given unless we are advised otherwise at wellgroomedwoofers@outlook.com . All
+                                        such photographs are property of WGW, we will gladly share images with the
+                                        client
+                                        owner.</p>
+                                    <h6>Complaints</h6>
+                                    <p class="small">If you are dissatisfied with any aspect of your pet’s groom please
+                                        let
+                                        us know before you leave. Reasonable requests to alter the trim will be dealt
+                                        with
+                                        immediately or changes noted for the next groom. We are more than happy to
+                                        disclose
+                                        any details of your pet’s groom or advise you about how best to care for your
+                                        pet’s
+                                        coat.</p>
+                                    <h6>Pickup/Drop off Taxi Service</h6>
+                                    <p class="small">Pickup and drop off service available within WA14 & WA15, please
+                                        book
+                                        at the same time as your grooming appointment.</p>
+                                    <hr>
+                                </article>
+                                <article>
+                                    <h5>Health</h5>
+                                    <h6>Walkies</h6>
+                                    <p class="small"> Please make sure your dog has had a walk and chance to ‘relieve’
+                                        itself of any
+                                        business before your appointment. We don’t mind the odd accident on the grooming
+                                        table, but would rather avoid it if possible!</p>
+                                    <h6>Bitches in season</h6>
+                                    <p class="small">If your dog is in season it would be best to avoid coming to the
+                                        salon, because
+                                        bitches can be slightly more sensitive than normal and being groomed may become
+                                        uncomfortable or upsetting for her. We are a clean salon and hygiene is of
+                                        utmost
+                                        importance, but a bitch in heat will leave behind scents that will drive the
+                                        boys
+                                        crazy and make for an uncomfortable grooming session for them too, if they are
+                                        following her appointment. Additional charges may apply if a dog is left for
+                                        grooming without informing the groomer of being in season. Late cancellation
+                                        charges
+                                        may apply if appointment is cancelled with less than 24 hours notice.</p>
+                                    <h6>Anal Glands</h6>
+                                    <p class="small">At WGW we do not undertake treatments covered under the Veterinary
+                                        Surgeons Act
+                                        1966, such as expressing anal glands, teeth cleaning or the administration of
+                                        medicines. A thorough health check is included within your grooming appointment
+                                        and
+                                        we will advise of any findings, requiring veterinary attention or otherwise.</p>
+                                    <h6>Parasites</h6>
+                                    <p class="small">WGW works hard to be a parasite free environment and we check for
+                                        fleas/ticks at the
+                                        beginning of the groom. If your dog has a flea infestation, please do not come
+                                        to
+                                        the salon, kindly reschedule your appointment once the problem is under control.
+                                        If
+                                        your dog is found to have a flea infestation, your appointment will be cancelled
+                                        with immediate effect and you will be asked to collect your dog. We recommend
+                                        that
+                                        you contact your Vet for advice on the best treatment for your situation.</p>
+                                    <p class="small">Ticks are commonly found on the dogs skin during the warmer months,
+                                        and we can
+                                        remove these during the grooming session. You will be informed upon collection
+                                        if we
+                                        found any, as you will need to keep an eye on the site of the ticks bite for a
+                                        couple of days just in case of any infection.</p>
+                                    <h6>Illness</h6>
+                                    <p class="small">Please do not bring your dog to the salon if it is unwell. The
+                                        health and welfare of
+                                        all of our woofers is paramount.</p>
+                                    <h6>Animal Health/Medical Disclosure</h6>
+                                    <p class="small">Whilst your dog is in our care its health and welfare is our
+                                        primary concern. It
+                                        will only ever be groomed according to it’s tolerance of the process. If your
+                                        dog is
+                                        fearful of any of the procedures employed during grooming, we will try our best
+                                        to
+                                        work around them.</p>
+                                    <p class="small">Occasionally during grooming a pre-existing condition may be
+                                        discovered which you
+                                        may not have been aware of. We will notify you of this so that you can seek
+                                        veterinary advice. Although extremely unlikely, accidents can happen during
+                                        grooming. In the event of an accident or serious medical issue arising during
+                                        your
+                                        dog’s groom you authorise us to seek emergency veterinary treatment.</p>
+                                    <p class="small">You will be given feedback after every groom. If you have any
+                                        queries or need
+                                        further clarification, please just ask or contact us at a later stage.
+                                        Older Dogs</p>
+                                    <p class="small"> We groom humanely at WGW and we will only carry out grooming work
+                                        that can be
+                                        tolerated by the dog. We respect our clients wishes and will attempt all
+                                        grooming
+                                        work, but will not cause undue stress to elderly dogs.</p>
+                                    <hr>
+                                </article>
+                                <article>
+                                    <h5>Coat Condition</h5>
+                                    <h6>Matting</h6>
+                                    <p class="small">At WGW we groom humanely, and we will always abide by the Animal
+                                        Welfare Act 2006. If your woofers coat has been neglected it is our policy to
+                                        shave the coat off using electric clippers and a close blade.</p>
+                                    <p class="small">Shaving the coat off is kinder as de-matting with a brush causes an
+                                        enormous amount of unnecessary discomfort and stress to the dog. We are always
+                                        happy to show you how to look after your dogs’ coat.</p>
+                                    <p class="small">There may be additional charges for shaving the entire coat off,
+                                        this is to cover the cost of additional maintenance of clippers and blades and
+                                        the cleaning of the equipment used.</p>
+                                    <hr>
+                                </article>
+                                <article>
+                                    <h5>Behaviour</h5>
+                                    <h6>Aggressive/Poorly Socialised Dogs</h6>
+                                    <p class="small">WGW reserve the right to refuse to groom any pet at the risk of
+                                        harming the groomer or the animal itself. If during the grooming appointment the
+                                        dog displays aggression that WGW have not been advised of, the groom will be
+                                        terminated immediately and the owner will be required to collect the dog.</p>
+                                    <p class="small">Prior to your appointment, Clients must inform WGW if their dog has ever bitten or
+                                    displayed aggression. Failure to do so may result in refusal of services.</p>
+                                    <p class="small">If necessary we may use Muzzles (to allow the grooming process to continue) this is
+                                    for the protection of the dog, the Groomer and the grooming equipment. We will not
+                                    muzzle a dog unless it gives us a reason to do so.</p>
+                                    <p class="small mb-0">The Dangerous Dogs Act holds owners liable for bites and injuries caused by their
+                                    dogs.</p>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="text-center mt-4">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
@@ -106,7 +316,8 @@
                 month = months[date.getMonth() - 1]
                 date.setMonth(date.getMonth() - 1)
             }
-            $.get(`/services/1/appointments/${date.getMonth() + 1}/${date.getFullYear()}/`).done(function (res) {
+            $.get(`/services/1/appointments/${date.getMonth() + 1}/${date.getFullYear()}/`).done(function (
+                res) {
                 $('#calendar h5').text(`${res.month} ${res.year}`);
                 let html = ''
                 for (let w in res.calendar) {
@@ -124,7 +335,7 @@
                             html += '<td class="disabled"></td>';
                         }
                     }
-                    html +='</tr>';
+                    html += '</tr>';
                 }
                 $('#calendar tbody').html(html);
                 date.setDate(1)
@@ -147,7 +358,8 @@
                 month = months[date.getMonth() + 1]
                 date.setMonth(date.getMonth() + 1)
             }
-            $.get(`/services/1/appointments/${date.getMonth() + 1}/${date.getFullYear()}/`).done(function (res) {
+            $.get(`/services/1/appointments/${date.getMonth() + 1}/${date.getFullYear()}/`).done(function (
+                res) {
                 $('#calendar h5').text(`${res.month} ${res.year}`);
                 let html = ''
                 for (let w in res.calendar) {
@@ -165,7 +377,7 @@
                             html += '<td class="disabled"></td>';
                         }
                     }
-                    html +='</tr>';
+                    html += '</tr>';
                 }
                 $('#calendar tbody').html(html);
                 date.setDate(1)
