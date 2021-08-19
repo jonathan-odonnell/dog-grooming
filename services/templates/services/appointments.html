@@ -54,13 +54,13 @@
                 {{ form.pets | as_crispy_field }}
                 {{ form.comments | as_crispy_field }}
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="id_terms_and_conditions" required>
-                    <label class="form-check-label" for="id_terms_and_conditions">
+                    <input class="form-check-input" type="checkbox" id="id_terms_of_service" required>
+                    <label class="form-check-label" for="id_of_service">
                         I have read and agree to the <a href="javascript:void(0)" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">Terms of Service</a>.
+                            data-bs-target="#terms_of_service_modal">Terms of Service</a>.
                     </label>
                 </div>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-label="Terms of Service"
+                <div class="modal fade" id="terms_of_service_modal" tabindex="-1" aria-label="Terms of Service"
                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable">
                         <div class="modal-content">
@@ -283,13 +283,14 @@
         new Date().getFullYear(),
         new Date().getMonth(),
         new Date().getDate() + 1
-    );
-    let endDate = new Date(
-        startDate.getFullYear(),
-        startDate.getMonth(),
-        startDate.getDate() + 55
-    );
-
+        );
+        let endDate = new Date(
+            startDate.getFullYear(),
+            startDate.getMonth(),
+            startDate.getDate() + 55
+        );
+        $('#appointments-form .btn').attr("disabled", true);
+            
     $('#calendar button').click(function () {
         let months = {
             '0': 'January',
@@ -417,5 +418,17 @@
             $('#appointments-form').parent().removeClass('d-none');
         });
     });
+    $('#id_terms_of_service').change(function() {
+        if ($(this).is(':checked')) {
+            $('#appointments-form .btn').attr("disabled", false);
+        } else {
+            $('#appointments-form .btn').attr("disabled", true);
+        }
+    });
+    $('#terms_of_service_modal').on('hidden.bs.modal', function() {
+        $('#id_terms_of_service').parent().find('a').on('focus', function() {
+            $(this).blur();
+        })
+    })
 </script>
 {% endblock %}
