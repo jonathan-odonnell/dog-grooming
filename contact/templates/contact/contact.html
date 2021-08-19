@@ -15,24 +15,128 @@
             </div>
         </div>
     </div>
-    <div class="container px-4 py-5">
-        <div class="row g-0">
-            <div class="col-12 col-lg-5 mb-4 mb-lg-0 order-lg-1">
-                <iframe id="map" src="https://www.google.com/maps/embed/v1/place?key={{ google_api_key }}&q=Altrincham,UK&zoom=15">
-                </iframe>
+</section>
+<section class="container p-4">
+    <div class="row g-0 my-3">
+        <div class="col-12 col-lg-5 mb-4 mb-lg-0 order-lg-1">
+            <div class="contact-info-item mb-3">
+                <div class="key">
+                    <i class="fas fa-phone-alt" aria-label="phone"></i>
+                </div>
+                <div class="value">
+                    <h4 class="fw-bold">Telephone:</h4>
+                    <p class="mb-0">07980 157 119</p>
+                </div>
             </div>
-            <div class="col-12 col-lg-7 px-lg-5 order-lg-0">
-                <form id="contact-form">
-                    {% csrf_token %}
-                    {{ form.full_name | as_crispy_field }}
-                    {{ form.email | as_crispy_field }}
-                    {{ form.subject | as_crispy_field }}
-                    {{ form.message | as_crispy_field }}
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-secondary">Send Message</button>
+            <div class="contact-info-item mb-3">
+                <div class="key">
+                    <i class="fas fa-envelope" aria-label="envelope"></i>
+                </div>
+                <div class="value">
+                    <h4 class="fw-bold">Email:</h4>
+                    <p class="mb-0">wellgroomedwoofers@outlook.com</p>
+                </div>
+            </div>
+            <div class="contact-info-item mb-3">
+                <div class="key">
+                    <i class="fas fa-map-marker-alt" aria-label="map marker"></i>
+                </div>
+                <div class="value">
+                    <h4 class="fw-bold">Address:</h4>
+                    <p class="mb-0">The New House,</p>
+                    <p class="mb-0">Richmond Road,</p>
+                    <p class="mb-0">Bowdon,</p>
+                    <p class="mb-0">Cheshire,</p>
+                    <p class="mb-0">WA14 3NW</p>
+                </div>
+            </div>
+            <div class="contact-info-item">
+                <div class="key">
+                    <i class="far fa-clock" aria-label="clock"></i>
+                </div>
+                <div class="value">
+                    <h4 class="fw-bold">Opening Times:</h4>
+                    <p>By appointment only</p>
+                    <div class="opening-times">
+                        <div class="day">
+                            <p class="mb-0">Monday</p>
+                        </div>
+                        <div class="hours">
+                            <p class="mb-0">Closed</p>
+                        </div>
                     </div>
-                </form>
+                    <div class="opening-times">
+                        <div class="day">
+                            <p class="mb-0">Tuesday</p>
+                        </div>
+                        <div class="hours">
+                            <p class="mb-0">09:00-17:00</p>
+                        </div>
+                    </div>
+                    <div class="opening-times">
+                        <div class="day">
+                            <p class="mb-0">Wednesday</p>
+                        </div>
+                        <div class="hours">
+                            <p class="mb-0">09:00-17:00</p>
+                        </div>
+                    </div>
+                    <div class="opening-times">
+                        <div class="day">
+                            <p class="mb-0">Thursday</p>
+                        </div>
+                        <div class="hours">
+                            <p class="mb-0">09:00-19:00</p>
+                        </div>
+                    </div>
+                    <div class="opening-times">
+                        <div class="day">
+                            <p class="mb-0">Friday</p>
+                        </div>
+                        <div class="hours">
+                            <p class="mb-0">09:00-17:00</p>
+                        </div>
+                    </div>
+                    <div class="opening-times">
+                        <div class="day">
+                            <p class="mb-0">Saturday</p>
+                        </div>
+                        <div class="hours">
+                            <p class="mb-0">09:00-15:00</p>
+                        </div>
+                    </div>
+                    <div class="opening-times">
+                        <div class="day">
+                            <p>Sunday</p>
+                        </div>
+                        <div class="hours">
+                            <p>Closed</p>
+                        </div>
+                    </div>
+                    <p class="mb-0">Closed Christmas and Bank Holidays</p>
+                </div>
             </div>
+        </div>
+        <div class="col-12 col-lg-7 px-lg-5 order-lg-0">
+            <form id="contact-form">
+                {% csrf_token %}
+                {{ form.full_name | as_crispy_field }}
+                {{ form.email | as_crispy_field }}
+                {{ form.subject | as_crispy_field }}
+                {{ form.message | as_crispy_field }}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-secondary">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<section class="container-fluid g-0">
+    <div class="row g-0">
+        <div class="col-12">
+            <iframe id="map"
+                src="https://www.google.com/maps/embed/v1/place?key={{ google_api_key }}&q=AThe+New+House,+Richmond+Rd,+Bowdon,+Altrincham+WA14+3NW&zoom=15">
+            </iframe>
         </div>
     </div>
 </section>

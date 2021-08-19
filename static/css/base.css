@@ -71,6 +71,7 @@
     width: 100%;
     height: 400px;
     background-color: grey;
+    margin: 0 0 -6px 0;
 }
 
 .btn-file {
@@ -111,6 +112,41 @@
     margin-top: 0.5rem !important;
 }
 
+.contact-info-item .key {
+    padding-right: 21px;
+    padding-top: 5px;
+    vertical-align: top;
+    display: inline-block;
+    width: 70px;
+}
+
+.opening-times .day {
+    padding-right: 1.5rem;
+    vertical-align: top;
+    display: inline-block;
+    width: 200px;
+}
+
+.contact-info-item .value,
+.opening-times .hours {
+    display: inline-block;
+}
+
+.contact-info-item i,
+.contact-info-item h4 {
+    font-size: 1.3rem;
+}
+
+.contact-info-item i {
+    background-color: #c2e3e5;
+    color: #fff;
+    height: 40px;
+    width: 40px;
+    border-radius: 25px;
+    text-align: center;
+    line-height: 40px;
+}
+
 .services-wrapper {
     max-height: 220px;
     overflow-y: scroll;
@@ -131,12 +167,8 @@
 }
 
 @media (min-width: 992px) {
-    #map {
-        height: 100%;
-    }
-
     .hvr-underline-from-center:before {
-        background-color: rgba(0,0,0,.9);
+        background-color: rgba(0, 0, 0, .9);
     }
 
 }
