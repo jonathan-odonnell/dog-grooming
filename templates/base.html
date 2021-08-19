@@ -47,7 +47,7 @@
                 </a>
             </div>
             <div class="col-4 d-none d-lg-block text-end">
-                <a href="{% url 'account_login'%}" class="nav-link d-inline px-2">
+                <a href="{% url 'account_login'%}?next={{ request.path }}" class="nav-link d-inline px-2">
                     <i class="fas fa-user icon text-dark"></i>
                 </a>
                 {% if bag_services %}
@@ -117,7 +117,7 @@
                             <img src="{{ MEDIA_URL}}logo_iupvqg.png" alt="" width="75" height="75">
                         </a>
                         <div class="d-block d-lg-none">
-                            <a href="{% url 'account_login'%}" class="nav-link d-inline px-2">
+                            <a href="{% url 'account_login'%}?next={{ request.path }}" class="nav-link d-inline px-2">
                                 <i class="fas fa-user icon text-dark"></i>
                             </a>
                             {% if bag_services %}
