@@ -33,6 +33,6 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         if instance.is_superuser:
             permissions = Permission.objects.all()
-            instance.user_permissions.add(permissions)
+            instance.user_permissions.set(permissions)
         UserProfile.objects.create(user=instance)
         instance.userprofile.save()
