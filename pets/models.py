@@ -3,6 +3,9 @@ from profiles.models import UserProfile
 
 
 class Breed(models.Model):
+    class Meta:
+        ordering = ('id',)
+
     CHOICES = [
         ('Small', 'Small'),
         ('Medium', 'Medium'),
@@ -21,6 +24,9 @@ class Breed(models.Model):
 
 
 class Pet(models.Model):
+    class Meta:
+        ordering = ('id',)
+
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
     breed = models.ForeignKey(
