@@ -10,6 +10,7 @@ class PriceAdminInline(admin.StackedInline):
 
 class ServiceAdmin(admin.ModelAdmin):
     inlines = (PriceAdminInline,)
+    ordering = ('id',)
 
 
 class AppointmentAdmin(admin.ModelAdmin):
