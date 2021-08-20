@@ -6,6 +6,9 @@ import redis
 
 
 class Service(models.Model):
+    class Meta:
+        ordering = ('id',)
+
     name = models.CharField(max_length=254)
     image = models.ImageField()
     description = models.TextField()
@@ -16,6 +19,9 @@ class Service(models.Model):
 
 
 class Price(models.Model):
+    class Meta:
+        ordering = ('id',)
+
     CHOICES = [
         ('Small', 'Small'),
         ('Medium', 'Medium'),
@@ -34,7 +40,8 @@ class Price(models.Model):
 
 class Availability(models.Model):
     class Meta:
-        verbose_name_plural = "Availability"
+        verbose_name_plural = 'Availability'
+        ordering = ('-end_time',)
 
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -58,6 +65,9 @@ class AppointmentManager(models.Manager):
 
 
 class Appointment(models.Model):
+    class Meta:
+        ordering = ('-end_time',)
+
     objects = AppointmentManager()
     order = models.ForeignKey('orders.Order', on_delete=models.SET_NULL,
                               null=True, blank=True,
