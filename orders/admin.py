@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderLineItem
+from .models import Order, OrderLineItem, Coupon
 from services.models import Appointment
 
 
@@ -28,4 +28,9 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_number', 'date', 'full_name', 'grand_total',)
 
 
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ('name', 'amount', 'start_date', 'end_date',)
+
+
 admin.site.register(Order, OrderAdmin)
+admin.site.register(Coupon, CouponAdmin)
