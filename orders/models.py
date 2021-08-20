@@ -10,6 +10,9 @@ from django.utils.timezone import get_current_timezone
 
 
 class Order(models.Model):
+    class Meta:
+        ordering = ('-date',)
+
     order_number = models.CharField(max_length=32, null=False, editable=False)
     user_profile = models.ForeignKey(UserProfile, on_delete=models.SET_NULL,
                                      null=True, blank=True,
@@ -67,6 +70,9 @@ class Order(models.Model):
 
 
 class OrderLineItem(models.Model):
+    class Meta:
+        ordering = ('id',)
+
     order = models.ForeignKey(Order, on_delete=models.CASCADE,
                               related_name='order_lineitems')
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
@@ -89,6 +95,9 @@ class OrderLineItem(models.Model):
 
 
 class Coupon(models.Model):
+    class Meta:
+        ordering = ('-end_date',)
+
     name = models.CharField(max_length=20)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     start_date = models.DateField()
