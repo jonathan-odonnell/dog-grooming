@@ -10,7 +10,7 @@ class Breed(models.Model):
         ('Extra Large', 'Extra Large'),
     ]
 
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=50)
     dog_size = models.CharField(max_length=20, choices=CHOICES)
 
     def __str__(self):
