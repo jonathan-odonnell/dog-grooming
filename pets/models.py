@@ -11,13 +11,13 @@ class Breed(models.Model):
     ]
 
     name = models.CharField(max_length=50)
-    dog_size = models.CharField(max_length=20, choices=CHOICES)
+    size = models.CharField(max_length=20, choices=CHOICES)
 
     def __str__(self):
         return self.name
 
     def get_size(self):
-        return self.dog_size
+        return self.size
 
 
 class Pet(models.Model):

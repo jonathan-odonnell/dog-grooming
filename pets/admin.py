@@ -4,8 +4,8 @@ from .models import Pet, Breed
 
 class BreedAdmin(admin.ModelAdmin):
     ordering = ('id',)
-    list_display = ('name', 'dog_size',)
-    list_filter = ('dog_size',)
+    list_display = ('name', 'size',)
+    list_filter = ('size',)
     list_per_page = 20
 
 
