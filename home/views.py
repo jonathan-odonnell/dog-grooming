@@ -17,3 +17,7 @@ class HomeView(TemplateView):
         }
         response = requests.request('PUT', url, data=payload, headers=headers)
         return HttpResponse(response)
+
+
+class TermsOfServiceView(TemplateView):
+    template_name = 'home/terms_of_service.html'
