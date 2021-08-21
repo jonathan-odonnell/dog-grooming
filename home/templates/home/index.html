@@ -12,5 +12,35 @@
         <div class="col-12"></div>
     </div>
 </section>
+<section class="container p-4">
+    <div class="row">
+        <div id="newsletter" class="col-12 col-md-10 col-lg-8 col-xl-6 mx-auto">
+            <h2 class="fw-bold text-center text-uppercase mb-4">Sign up to our newsletter!</h2>
+            <form class="input-group mb-4">
+                {% csrf_token %}
+                <input type="email" class="form-control" name="newsletter" placeholder="Email Address"
+                    aria-label="Email Address">
+                <button class="btn btn-secondary text-uppercase" type="submit">Sign me up</button>
+            </form>
+        </div>
+    </div>
+</section>
 
+{% endblock %}
+
+{% block postloadjs %}
+<script>
+    $('#newsletter form').submit(function (e) {
+        e.preventDefault();
+        let postData = {
+            csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+            email: $('input[name="newsletter"]').val(),
+        }
+        $.post('/', postData).done(function () {
+            $('#newsletter').children().remove();
+            $('#newsletter').append(
+                '<p class="lead text-center">Thanks for signing up to our newsletter!</p>');
+        })
+    })
+</script>
 {% endblock %}
