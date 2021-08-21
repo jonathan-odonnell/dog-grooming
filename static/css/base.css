@@ -152,8 +152,18 @@
     overflow-y: scroll;
 }
 
-.footer-wrapper {
+footer,
+footer a,
+footer a:hover {
     color: #777777;
+}
+
+footer a {
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
 }
 
 .social-media i {
