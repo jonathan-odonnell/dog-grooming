@@ -211,6 +211,22 @@
             <div class="row">
                 <div class="col-12 col-lg-3 order-lg-1 mb-5">
                     <h6 class="fw-bold">Links</h6>
+                    <ul class="list-unstyled small">
+                        <li class="nav-item">
+                            <a href="{% url 'services' %}">Services</a>
+                        </li>
+                        {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{% url 'profile' %}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'orders' %}">Orders</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a href="{% url 'contact' %}">Contact Us</a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="col-12 col-lg-3 order-lg-0 mb-5">
                     <h6 class="fw-bold">Follow Us</h6>
@@ -239,7 +255,7 @@
                 </div>
                 <div class="col-12 col-lg-3 order-lg-2 mb-5">
                     <h6 class="fw-bold">Contact</h6>
-                    <p class="small mb-0"><a href="tel:07980157119">07980 157 119</a></p>
+                    <p class="small mb-0"><a href="tel:+447980157119">07980 157 119</a></p>
                     <p class="small mb-0"><a
                             href="mailto:wellgroomedwoofers@outlook.com">wellgroomedwoofers@outlook.com</a></p>
                 </div>
