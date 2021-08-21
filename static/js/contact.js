@@ -1,7 +1,7 @@
 $('#contact-form').submit(function (e) {
     e.preventDefault();
     if ($('#contact-form')[0].reportValidity()) {
-        let formData = {
+        let postData = {
             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
             'name': $('#id_name').val(),
             'email': $('#id_email').val(),
