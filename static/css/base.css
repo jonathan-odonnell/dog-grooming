@@ -1,3 +1,8 @@
+.navbar-brand img {
+    width: 75px;
+    height: 75px;
+}
+
 .hvr-underline-from-center:before {
     height: 3px;
     background-color: transparent;
@@ -244,6 +249,11 @@ footer a:hover {
 }
 
 @media (min-width: 992px) {
+    .navbar-brand img {
+        width: 125px;
+        height: 125px;
+    }
+
     .hvr-underline-from-center:before {
         background-color: rgba(0, 0, 0, .9);
     }
