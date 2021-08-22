@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 
-{% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
-{% endblock %}
-
 {% block content %}
-
 <section class="container p-4">
     <div class="row mb-4">
         <div class="col-12">
@@ -22,10 +17,15 @@
         </div>
         {% endif %}
         <div class="col-12">
-            <div class="row g-0" data-masonry='{"percentPosition": true }'>
+            <div id="gallery" class="row g-0">
                 {% for item in images %}
-                <div class="col-6 col-md-4 col-lg-3">
-                    <img class="img-fluid" src="{{ item.image.url }}" alt="Image of {{ item.name }}">
+                <div class="col-6 col-md-4 col-lg-3 position-relative">
+                    <img class="gallery-images" src="{{ item.image.url }}" alt="Image of {{ item.name }}">
+                    {% if request.user.is_superuser %}
+                    <a class="position-absolute" href="{% url 'delete_image' item.id %}">
+                        <i class="fas fa-trash text-light"></i>
+                    </a>
+                    {% endif %}
                 </div>
                 {% endfor %}  
             </div>
