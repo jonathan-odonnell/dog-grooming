@@ -27,13 +27,38 @@
                     </a>
                     {% endif %}
                 </div>
-                {% endfor %}  
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<section class="modal fade" id="image-modal" tabindex="-1" aria-label="Image modal" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="image-container position-relative mx-auto">
+                    <a class="prev" href="javascript:void(0);">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a class="next" href="javascript:void(0);">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    {% for item in images %}
+                    <img src="{{ item.image.url }}" alt="Image of {{ item.name }}">
+                    {% endfor %}
+                </div>
+                {% for item in images %}
+                <p class="text-center mt-3 mb-0">{{item.name}}</p>
+                {% endfor %}
             </div>
         </div>
     </div>
 </section>
 {% if request.user.is_superuser %}
-<div class="modal fade" id="addImage" tabindex="-1" aria-label="addImage" aria-hidden="true">
+<section class="modal fade" id="addImage" tabindex="-1" aria-label="addImage" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -49,6 +74,45 @@
             </form>
         </div>
     </div>
-</div>
+</section>
 {% endif %}
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+<script>
+    let currentImage;
+    $('.gallery-images').click(function () {
+        let modal = new bootstrap.Modal(document.getElementById('image-modal'))
+        imagesTotal = $('.gallery-images').length - 1
+        currentImage = $('.gallery-images').index(this);
+        showImage(currentImage)
+        modal.show();
+    });
+    $('.prev').click(function () {
+        if (currentImage > 0) {
+            showImage(currentImage - 1)
+            currentImage -= 1
+        } else {
+            showImage(imagesTotal)
+            currentImage = imagesTotal
+        }
+    });
+    $('.next').click(function () {
+        if (currentImage < imagesTotal) {
+            showImage(currentImage + 1)
+            currentImage += 1
+        } else {
+            showImage(0)
+            currentImage = 0
+        }
+
+    });
+
+    function showImage(n) {
+        $('#image-modal img, #image-modal p').hide();
+        $('#image-modal img').eq(n).show();
+        $('#image-modal p').eq(n).show();
+    }
+</script>
 {% endblock %}
