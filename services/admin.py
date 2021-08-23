@@ -5,7 +5,8 @@ from django_dramatiq.models import Task
 
 class PriceAdminInline(admin.StackedInline):
     model = Price
-    extra = 1
+    extra = 4
+    max_num = 4
 
 
 class ServiceAdmin(admin.ModelAdmin):
