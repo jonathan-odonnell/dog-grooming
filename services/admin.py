@@ -7,6 +7,7 @@ class PriceAdminInline(admin.StackedInline):
     model = Price
     extra = 4
     max_num = 4
+    can_delete = False
 
 
 class ServiceAdmin(admin.ModelAdmin):
