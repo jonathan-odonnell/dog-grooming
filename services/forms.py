@@ -50,7 +50,6 @@ class PriceForm(forms.ModelForm):
             Row(
                 Column('size', css_class='col'),
                 Column('price', css_class='col'),
-                Column('DELETE', css_class='col-auto'),
                 css_class='row mb-3',
             )
         )
@@ -98,4 +97,4 @@ class AppointmentForm(forms.Form):
 
 
 PriceFormSet = inlineformset_factory(
-    Service, Price, form=PriceForm, extra=4, max_num=4)
+    Service, Price, form=PriceForm, extra=4, max_num=4, can_delete=False)
