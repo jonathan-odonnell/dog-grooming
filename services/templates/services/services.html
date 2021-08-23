@@ -9,6 +9,14 @@
         </div>
     </div>
     <div class="row">
+        {% if request.user.is_superuser %}
+        <div class="col-12 mb-3">
+            <a class="btn btn-primary" href="{% url 'add_service' %}">
+                <i class="fa fa-plus me-2"></i>
+                <span>Add Service</span>
+            </a>
+        </div>
+        {% endif %}
         <div class="col-12">
             {% for service in services %}
             <div class="card border-primary rounded-2{% if forloop.counter < object_list|length %} mb-4{% endif %}">
@@ -24,7 +32,7 @@
                     <a href="{% url 'service_appointments' service.id %}" class="btn btn-primary">Book Appointment</a>
                     {% endif %}
                 </div>
-              </div>
+            </div>
             {% endfor %}
         </div>
     </div>
