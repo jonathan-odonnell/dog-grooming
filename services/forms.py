@@ -48,18 +48,27 @@ class PriceForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
-                Column('price', css_class='col'),
                 Column('size', css_class='col'),
+                Column('price', css_class='col'),
                 Column('DELETE', css_class='col-auto'),
                 css_class='row mb-3',
             )
         )
         self.helper.form_tag = False
+        choices = [
+            ('', 'Size *'),
+            ('Small', 'Small'),
+            ('Medium', 'Medium'),
+            ('Large', 'Large'),
+            ('Extra Large', 'Extra Large'),
+        ]
 
         for field in self.fields:
             if field == 'price':
                 self.fields[field].widget.attrs[
                     'placeholder'] = 'Price *'
+            else:
+                self.fields[field].choices = choices
             self.fields[field].label = False
 
 
