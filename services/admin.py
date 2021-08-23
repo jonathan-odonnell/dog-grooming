@@ -13,6 +13,8 @@ class ServiceAdmin(admin.ModelAdmin):
 
 
 class AppointmentAdmin(admin.ModelAdmin):
+    list_display = ('start_time', 'end_time', 'reserved', 'confirmed')
+    list_filter = ('reserved', 'confirmed',)
     readonly_fields = ('task_id', 'last_updated',)
 
 
