@@ -88,4 +88,5 @@ class AppointmentForm(forms.Form):
             self.fields[field].label = False
 
 
-PriceFormSet = inlineformset_factory(Service, Price, form=PriceForm, extra=1)
+PriceFormSet = inlineformset_factory(
+    Service, Price, form=PriceForm, extra=4, max_num=4)
