@@ -16,7 +16,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Breed</th>
-                            <th></th>
+                            <th>Date of Birth</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -25,7 +25,7 @@
                             <tr>
                                 <td>{{ pet.name }}</td>
                                 <td>{{ pet.breed.name }}</td>
-                                <td></td>
+                                <td>{{ pet.date_of_birth|date }}</td>
                                 <td>
                                     <a class="text-info pe-3" href="{% url 'edit_pet' pet.id %}">
                                         <i class="fas fa-edit"></i>
