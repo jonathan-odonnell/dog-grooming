@@ -56,7 +56,7 @@ class Vet(models.Model):
         verbose_name_plural = 'Vet'
 
     pet = models.OneToOneField(Pet, on_delete=models.CASCADE,
-                            related_name='vet')
+                               related_name='vet')
     full_name = models.CharField(max_length=50)
     phone_number = PhoneNumberField(max_length=20)
     address_line_1 = models.CharField(max_length=80)
@@ -64,7 +64,7 @@ class Vet(models.Model):
     town_or_city = models.CharField(max_length=40)
     county = models.CharField(max_length=80)
     postcode = models.CharField(max_length=20)
-    country = CountryField(blank_label='Country *')
+    country = CountryField()
 
     def __str__(self):
         return self.full_name
@@ -84,7 +84,7 @@ class EmergencyContact(models.Model):
     town_or_city = models.CharField(max_length=40)
     county = models.CharField(max_length=80)
     postcode = models.CharField(max_length=20)
-    country = CountryField(blank_label='Country *')
+    country = CountryField()
 
     def __str__(self):
         return self.full_name
