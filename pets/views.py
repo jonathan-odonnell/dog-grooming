@@ -30,7 +30,7 @@ class AddPetView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.user_profile = self.request.user.userprofile
         self.object.save()
-        self.object.emergency_contact.create(
+        self.object.emergency_contacts.create(
             full_name=self.request.user.userprofile.user.get_full_name(),
             relationship='Owner',
             phone_number=self.request.user.userprofile.phone_number,
