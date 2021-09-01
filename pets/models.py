@@ -75,7 +75,7 @@ class EmergencyContact(models.Model):
         ordering = ('id',)
 
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE,
-                            related_name='emergency_contact')
+                            related_name='emergency_contacts')
     full_name = models.CharField(max_length=50)
     relationship = models.CharField(max_length=20)
     phone_number = PhoneNumberField(max_length=20)
