@@ -6,7 +6,7 @@ from crispy_forms.helper import FormHelper
 class PetForm(forms.ModelForm):
     class Meta:
         model = Pet
-        exclude = ('user_profile',)
+        fields = ('name', 'date_of_birth', 'breed', 'gender', 'colour',)
 
     def __init__(self, *args, **kwargs):
         """
