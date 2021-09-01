@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django_countries.fields import country_to_text
 from .models import Pet
 from .forms import PetForm
 
@@ -29,6 +30,17 @@ class AddPetView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.user_profile = self.request.user.userprofile
         self.object.save()
+        self.object.emergency_contact.create(
+            full_name=self.request.user.userprofile.user.get_full_name(),
+            relationship='Owner',
+            phone_number=self.request.user.userprofile.phone_number,
+            address_line_1=self.request.user.userprofile.address_line_1,
+            address_line_2=self.request.user.userprofile.address_line_2,
+            town_or_city=self.request.user.userprofile.town_or_city,
+            county=self.request.user.userprofile.county,
+            postcode=self.request.user.userprofile.postcode,
+            country=self.request.user.userprofile.country
+        )
         messages.success(self.request, 'Successfully added pet!')
         return redirect(self.get_success_url())
 
