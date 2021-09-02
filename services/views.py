@@ -7,12 +7,12 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db.models import Min
-from django.utils.timezone import make_aware, localdate, localtime, now
-from .models import Service, Appointment
+from django.utils.timezone import localtime, make_aware, localdate, now
+from .models import Availability, Service, Appointment
 from pets.models import Pet
 from .forms import ServiceForm, AppointmentForm, PriceFormSet
 from .utils import SuperUserRequiredMixin
-from datetime import date, datetime
+from datetime import date, datetime, time, timedelta
 import calendar
 from calendar import Calendar
 
@@ -45,7 +45,7 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         for i in range(1, num_days + 1):
             day_date = date(year, month, i)
             appointments = self.get_appointments(day_date)
-            if i >= day and len(appointments) >= 0:
+            if i >= day and len(appointments) >= 1:
                 classes.append('available')
             else:
                 classes.append('disabled')
@@ -55,17 +55,73 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         context['calendar'] = Calendar(6).monthdayscalendar(year, month)
         context['month'] = calendar.month_name[month]
         context['year'] = year
+        context['classes'] = classes
         context['form'] = AppointmentForm(pets)
         return context
 
     def get_appointments(self, date):
+        opening_hours = {
+            '0': {'start': '09:00',
+                  'end': '09:00'},
+            '1': {'start': '09:00',
+                  'end': '17:00'},
+            '2': {'start': '09:00',
+                  'end': '17:00'},
+            '3': {'start': '09:00',
+                  'end': '19:00'},
+            '4': {'start': '09:00',
+                  'end': '17:00'},
+            '5': {'start': '09:00',
+                  'end': '15:00'},
+            '6': {'start': '09:00',
+                  'end': '09:00'},
+        }
+        availability = Availability.objects.filter(
+            start_time__date__lte=date, end_time__date__gte=date)
         available_appointments = []
-        appointments = Appointment.objects.available_appointments().filter(
-            start_time__date__gte=date,
-            end_time__date__lte=date, confirmed=False)
-        for appointment in appointments:
-            available_appointments.append(
-                localtime(appointment.start_time).strftime('%H:%M'))
+
+        if availability.exists():
+            if localdate(availability.first().end_time) == date:
+                start_time = make_aware(datetime.combine(
+                    date, datetime.strptime(
+                        opening_hours[str(date.weekday())]
+                        ['start'], '%H:%M').time()))
+                end_time = localtime(availability.first().end_time)
+            else:
+                start_time = make_aware(datetime.combine(
+                    date, datetime.strptime(
+                        opening_hours[str(date.weekday())]
+                        ['start'], '%H:%M').time()))
+                end_time = make_aware(datetime.combine(
+                    date, datetime.strptime(
+                        opening_hours[str(date.weekday())]
+                        ['end'], '%H:%M').time()))
+        else:
+            start_time = make_aware(datetime.combine(date, time(hour=9)))
+            end_time = make_aware(datetime.combine(date, time(hour=9)))
+
+        if start_time == end_time:
+            appointments = [(start_time, start_time)] + [(end_time, end_time)]
+        else:
+            appointments = Appointment.objects.filter(
+                start_time__date=date,
+                end_time__date=date, confirmed=False)
+            appointments = sorted([(start_time, start_time)] +
+                                  [(localtime(a.start_time),
+                                    localtime(a.end_time))
+                                   for a in appointments] +
+                                  [(end_time, end_time)])
+
+        if self.object.id == 1:
+            duration = timedelta(hours=3)
+        else:
+            duration = timedelta(hours=2)
+
+        for start, end in ((appointments[i][1], appointments[i+1][0])
+                           for i in range(len(appointments)-1)):
+            while start + duration <= end:
+                available_appointments.append(start.strftime('%H:%M'))
+                start += duration
         return available_appointments
 
     def get(self, request, pk, month=None, year=None):
@@ -74,14 +130,15 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({
                 'calendar': context['calendar'],
-                'classes': context['classes'],
                 'month': context['month'],
                 'year': context['year'],
+                'classes': context['classes']
             })
         else:
             return self.render_to_response(context)
 
     def post(self, request, pk):
+        self.object = self.get_object()
         date = make_aware(datetime.strptime(
             request.POST['date'], '%d/%m/%Y'))
         appointments = self.get_appointments(date)
