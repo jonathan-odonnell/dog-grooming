@@ -37,7 +37,7 @@
                     <tr>
                         {% for day in week %}
                         {% if day > 0 %}
-                        <td class="{% if classes|index:day === 'disabled' %}{{ classes|index:day }}{% endif %}">{{ day }}</td>
+                        <td class="{{ classes|index:day }}">{{ day }}</td>
                         {% else %}
                         <td class="disabled"></td>
                         {% endif %}
@@ -328,7 +328,11 @@
                             date.setDate(parseInt(res.calendar[w][d]))
                             let day = parseInt(res.calendar[w][d])
                             if (res.calendar[w][d] > 0 && date >= startDate && date <= endDate) {
-                                html += `<td class=${res.classes[day - 1]}>${day}</td>`;
+                                if (res.classes[day - 1] === 'disabled') {
+                                    html += `<td class="${res.classes[day - 1]}">${day}</td>`;
+                                } else {
+                                    html += `<td>${day}</td>`;
+                                }
                             } else {
                                 html += `<td class="disabled">${day}</td>`;
                             }
@@ -370,7 +374,11 @@
                             date.setDate(parseInt(res.calendar[w][d]))
                             let day = parseInt(res.calendar[w][d])
                             if (res.calendar[w][d] > 0 && date >= startDate && date <= endDate) {
-                                html += `<td class="${res.classes[day - 1]}">${day}</td>`;
+                                if (res.classes[day - 1] === 'disabled') {
+                                    html += `<td class="${res.classes[day - 1]}">${day}</td>`;
+                                } else {
+                                    html += `<td>${day}</td>`;
+                                }
                             } else {
                                 html += `<td class="disabled">${day}</td>`;
                             }
