@@ -45,19 +45,14 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         for i in range(1, num_days + 1):
             day_date = date(year, month, i)
             appointments = self.get_appointments(day_date)
-            if i >= day and len(appointments) == 1:
-                classes.append('availability-1')
-            elif i >= day and len(appointments) == 2:
-                classes.append('availability-2')
-            elif i >= day and len(appointments) == 3:
-                classes.append('availability-3')
+            if i >= day and len(appointments) >= 0:
+                classes.append('available')
             else:
                 classes.append('disabled')
 
         pets = Pet.objects.filter(user_profile=self.request.user.userprofile)
 
         context['calendar'] = Calendar(6).monthdayscalendar(year, month)
-        context['classes'] = classes
         context['month'] = calendar.month_name[month]
         context['year'] = year
         context['form'] = AppointmentForm(pets)
