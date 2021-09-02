@@ -37,7 +37,7 @@
                     <tr>
                         {% for day in week %}
                         {% if day > 0 %}
-                        <td class="{{ classes|index:day}}">{{ day }}</td>
+                        <td class="{% if classes|index:day === 'disabled' %}{{ classes|index:day }}{% endif %}">{{ day }}</td>
                         {% else %}
                         <td class="disabled"></td>
                         {% endif %}
