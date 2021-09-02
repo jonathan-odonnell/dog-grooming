@@ -59,9 +59,8 @@ class Availability(models.Model):
 class AppointmentManager(models.Manager):
     def available_appointments(self):
         current_time = localtime(now())
-        return self.filter(models.Q(
-            last_updated__gte=current_time+timedelta(days=1))
-            | models.Q(last_updated__isnull=True))
+        return self.filter(models.Q(confirmed=True) | models.Q(
+            last_updated__gte=current_time+timedelta(hours=2)))
 
 
 class Appointment(models.Model):
