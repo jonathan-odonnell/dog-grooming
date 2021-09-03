@@ -6,7 +6,7 @@ from django.http.response import JsonResponse
 from django.template.loader import render_to_string
 from pets.models import Pet
 from services.models import Service, Appointment
-from datetime import datetime
+from datetime import datetime, time, timedelta
 from django.utils.timezone import make_aware, localtime, now
 
 
@@ -25,44 +25,52 @@ class AddServiceToBagView(View):
         start_time = make_aware(datetime.strptime(
             request.POST['appointment'], '%d/%m/%Y %H:%M'))
 
-        try:
-            appointment = Appointment.objects.get(
-                start_time=start_time, confirmed=False)
-            appointment.reserved = True
-            appointment.comments = request.POST['comments']
-            appointment.last_updated = localtime(now())
-            appointment.save()
+        if item_id == '1':
+            appointment = Appointment.objects.get_or_create(
+                start_time__gte=start_time,
+                end_time__gte=start_time + timedelta(hours=3),
+                comments=request.POST['comments'],
+                reserved=True,
+                last_updated=localtime(now())
+            )
+        else:
+            appointment = Appointment.objects.get_or_create(
+                start_time__gte=start_time,
+                end_time__gte=start_time + timedelta(hours=2),
+                comments=request.POST['comments'],
+                reserved=True,
+                last_updated=localtime(now())
+            )
 
-            if item_id in list(bag['services'].keys()):
-                if size in bag['services'][item_id].keys():
-                    bag['services'][item_id][size]['quantity'] += 1
-                    bag['services'][item_id][size]['appointments'].append(
-                        appointment.id)
-                    messages.success(
-                        request, f'Added {service.name} for {size} dog to bag')
-                else:
-                    bag['services'][item_id][size] = {
-                        'quantity': 1,
-                        'appointments': [appointment.id]
-                    }
-                    messages.success(
-                        request, f'Added {service.name} for {size} dog to bag')
-            else:
-                bag['services'][item_id] = {size: {
-                    'quantity': 1,
-                    'appointments': [appointment.id]
-                }}
-                messages.success(
-                    request, f'Added {service.name} for {size} dog to bag')
-
-            request.session['bag'] = bag
-            return redirect(reverse('services'))
-
-        except Appointment.DoesNotExist:
-            messages.success(
+        if appointment[1] is False:
+            messages.error(
                 request, 'Appointment is no longer available. \
                     Please try again.')
             return redirect(request.META.get('HTTP_REFERER'))
+        elif item_id in list(bag['services'].keys()):
+            if size in bag['services'][item_id].keys():
+                bag['services'][item_id][size]['quantity'] += 1
+                bag['services'][item_id][size]['appointments'].append(
+                    appointment.id)
+                messages.success(
+                    request, f'Added {service.name} for {size} dog to bag')
+            else:
+                bag['services'][item_id][size] = {
+                    'quantity': 1,
+                    'appointments': [appointment.id]
+                }
+                messages.success(
+                    request, f'Added {service.name} for {size} dog to bag')
+        else:
+            bag['services'][item_id] = {size: {
+                'quantity': 1,
+                'appointments': [appointment.id]
+            }}
+            messages.success(
+                request, f'Added {service.name} for {size} dog to bag')
+
+        request.session['bag'] = bag
+        return redirect(reverse('services'))
 
 
 class RemoveServiceFromBagView(View):
