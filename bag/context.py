@@ -18,16 +18,21 @@ def bag_contents(request):
         service = get_object_or_404(Service, id=item_id)
         for size, size_data in item_data.items():
             price = get_object_or_404(Price, service=service, size=size)
+            item_price = item_data[size]['quantity'] * price.price
             order_total += item_data[size]['quantity'] * price.price
             item_count += item_data[size]['quantity']
             appointments = []
-            for appointment in size_data['appointments']:
+            for appointment, taxi in size_data['appointments']:
                 appointment = get_object_or_404(Appointment, id=appointment)
-                appointments.append(appointment)
+                appointments.append({'appointment': appointment, 'taxi': taxi})
+                if taxi:
+                    item_price += Decimal(10.00)
+                    order_total += Decimal(10.00)
             services.append({
                 'item_id': item_id,
                 'service': service,
-                'item_price': price,
+                'price': item_price,
+                'size': size,
                 'quantity': item_data[size]['quantity'],
                 'appointments': appointments,
             })
