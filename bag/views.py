@@ -6,7 +6,7 @@ from django.http.response import JsonResponse
 from django.template.loader import render_to_string
 from pets.models import Pet
 from services.models import Service, Appointment
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 from django.utils.timezone import make_aware, localtime, now
 
 
@@ -24,6 +24,7 @@ class AddServiceToBagView(View):
         size = Pet.objects.get(id=request.POST['pet']).get_size()
         start_time = make_aware(datetime.strptime(
             request.POST['appointment'], '%d/%m/%Y %H:%M'))
+        pickup = 'taxi' in request.POST
 
         if item_id == '1':
             appointment = Appointment.objects.get_or_create(
@@ -51,20 +52,20 @@ class AddServiceToBagView(View):
             if size in bag['services'][item_id].keys():
                 bag['services'][item_id][size]['quantity'] += 1
                 bag['services'][item_id][size]['appointments'].append(
-                    appointment.id)
+                    [{appointment.id: pickup}])
                 messages.success(
                     request, f'Added {service.name} for {size} dog to bag')
             else:
                 bag['services'][item_id][size] = {
                     'quantity': 1,
-                    'appointments': [appointment.id]
+                    'appointments': [{appointment.id: pickup}]
                 }
                 messages.success(
                     request, f'Added {service.name} for {size} dog to bag')
         else:
             bag['services'][item_id] = {size: {
                 'quantity': 1,
-                'appointments': [appointment.id]
+                'appointments': [{appointment.id: pickup}]
             }}
             messages.success(
                 request, f'Added {service.name} for {size} dog to bag')
@@ -81,9 +82,13 @@ class RemoveServiceFromBagView(View):
         try:
             bag = request.session.get('bag', {})
             size = request.POST['size']
-            appointment = int(request.POST['appointment'])
+            appointment = request.POST['appointment']
             bag['services'][item_id][size]['quantity'] -= 1
             bag['services'][item_id][size]['appointments'].remove(appointment)
+
+            for item in bag['services'][item_id][size]['appointments']:
+                if appointment in item.keys():
+                    bag['services'][item_id][size]['appointments'].pop(item)
 
             if bag['services'][item_id][size]['quantity'] == 0:
                 bag['services'][item_id].pop(size)
