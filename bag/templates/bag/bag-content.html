@@ -6,18 +6,18 @@
 </div>
 <div class="d-md-none">
     {% for item in bag_services %}
-    {% for appointment in item.appointments %}
+    {% for appointment_item in item.appointments %}
     <div class="row g-0">
         <div class="col-4 mb-2">
             {% include "bag/service-image.html" %}
         </div>
         <div class="col-8 mb-2">
             {% include "bag/service-info.html" %}
-            <p class="my-0"><strong>Price:</strong> £{{ item.item_price.price }}</p>
+            <p class="my-0"><strong>Price:</strong> £{{ item.price }}</p>
         </div>
         <div class="col-12 offset-4 mb-2">
             <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}"
-                data-size="{{ item.item_price.size }}" data-appointment="{{ appointment.id}}">
+                data-size="{{ item.size }}" data-appointment="{{ appointment.id}}">
                 <small>Remove</small>
             </a>
         </div>
@@ -56,7 +56,7 @@
                     </tr>
                 </thead>
                 {% for item in bag_services %}
-                {% for appointment in item.appointments %}
+                {% for appointment_item in item.appointments %}
                 <tr>
                     <td class="p-3 w-25">
                         {% include "bag/service-image.html" %}
@@ -65,11 +65,11 @@
                         {% include "bag/service-info.html" %}
                     </td>
                     <td class="py-3">
-                        <p class="my-0">£{{ item.item_price.price }}</p>
+                        <p class="my-0">£{{ item.price }}</p>
                     </td>
                     <td class="py-3">
                         <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}"
-                            data-size="{{ item.item_price.size }}" data-appointment="{{ appointment.id}}">
+                            data-size="{{ item.size }}" data-appointment="{{ appointment.id}}">
                             <small>Remove</small>
                         </a>
                     </td>
