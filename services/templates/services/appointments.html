@@ -54,6 +54,12 @@
                 {{ form.pets | as_crispy_field }}
                 {{ form.comments | as_crispy_field }}
                 <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="id_taxi" name="taxi">
+                    <label class="form-check-label" for="id_taxi">
+                        Pickup and drop off within WA14 and WA15 - £10 
+                    </label>
+                </div>
+                <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="id_terms_of_service" required>
                     <label class="form-check-label" for="id_of_service">
                         I have read and agree to the <a href="javascript:void(0)" data-bs-toggle="modal"
