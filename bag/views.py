@@ -48,7 +48,7 @@ class AddServiceToBagView(View):
                 request, 'Appointment is no longer available. \
                     Please try again.')
             return redirect(request.META.get('HTTP_REFERER'))
-        elif item_id in list(bag['services'].keys()):
+        elif item_id in bag['services'].keys():
             if size in bag['services'][item_id].keys():
                 bag['services'][item_id][size]['quantity'] += 1
                 bag['services'][item_id][size]['appointments'].append(
