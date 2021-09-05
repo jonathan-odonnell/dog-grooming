@@ -9,13 +9,13 @@ class OrderLineItemAdminInline(admin.TabularInline):
     extra = 1
 
 
-class AppointmentmAdminInline(admin.StackedInline):
+class AppointmentAdminInline(admin.StackedInline):
     model = Appointment
     extra = 1
 
 
 class OrderAdmin(admin.ModelAdmin):
-    inlines = (OrderLineItemAdminInline, AppointmentmAdminInline)
+    inlines = (OrderLineItemAdminInline, AppointmentAdminInline)
 
     readonly_fields = ('order_number', 'date', 'order_total',
                        'discount', 'grand_total', 'stripe_pid')
