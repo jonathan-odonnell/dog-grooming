@@ -68,12 +68,17 @@ class Appointment(models.Model):
         ordering = ('-end_time',)
 
     objects = AppointmentManager()
-    order = models.ForeignKey('orders.Order', on_delete=models.SET_NULL,
-                              null=True, blank=True,
+    order = models.ForeignKey('orders.Order', null=True, blank=True,
+                              on_delete=models.CASCADE,
                               related_name='appointments')
+    order_lineitem = models.ForeignKey('orders.OrderLineItem',
+                                       null=True, blank=True,
+                                       on_delete=models.CASCADE,
+                                       related_name='appointments')
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     comments = models.TextField(null=True, blank=True)
+    taxi = models.BooleanField(default=False)
     reserved = models.BooleanField(default=False)
     confirmed = models.BooleanField(default=False)
     task_id = models.CharField(max_length=50, null=True,
