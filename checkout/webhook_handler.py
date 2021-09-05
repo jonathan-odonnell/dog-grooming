@@ -2,11 +2,11 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
-from django.utils.timezone import make_aware
+from django.utils.timezone import localdate, localtime, now
 from services.models import Service, Price, Appointment
 from orders.models import Order, OrderLineItem, Coupon
 from profiles.models import UserProfile
-from datetime import datetime, date, time
+import time
 import json
 
 
@@ -76,7 +76,7 @@ class StripeWH_Handler:
             profile.save()
 
         if coupon:
-            current_date = make_aware(date.today())
+            current_date = localdate(now())
             coupon_qs = Coupon.objects.get(
                 name=coupon,
                 start_date_gte=current_date,
@@ -135,20 +135,27 @@ class StripeWH_Handler:
                     for size, size_data in item_data.items():
                         service = Service.objects.get(id=item_id)
                         prices = Price.objects.get(service=service, size=size)
-                        OrderLineItem.objects.create(
+                        lineitem = OrderLineItem.objects.create(
                             order=order,
                             service=service,
                             size=size,
                             price=prices.price,
                             quantity=size_data['quantity'],
                         )
-                        for appointment in item_data['appointments']:
-                            appointment_qs = Appointment.objects.get(
-                                id=appointment, reserved=True, confirmed=False)
-                            appointment_qs.order = order
-                            appointment_qs.confirmed = True
-                            appointment.last_updated = make_aware(datetime.now())
-                            appointment_qs.save()
+                        for appointment in size_data['appointments']:
+                            for appointment_id, appointment_data \
+                                    in appointment:
+                                appointment_qs = Appointment.objects.get(
+                                    id=appointment_id,
+                                    reserved=True,
+                                    confirmed=False
+                                )
+                                appointment_qs.order = self.object
+                                appointment_qs.order_lineitem = lineitem
+                                appointment_qs.taxi = appointment_data
+                                appointment_qs.confirmed = True
+                                appointment.last_updated = localtime(now())
+                                appointment_qs.save()
             except Exception as e:
                 if order:
                     order.delete()

@@ -128,7 +128,7 @@ class CheckoutView(LoginRequiredMixin, CreateView):
                 try:
                     service = Service.objects.get(id=item_id)
                     prices = Price.objects.get(service=service, size=size)
-                    OrderLineItem.objects.create(
+                    lineitem = OrderLineItem.objects.create(
                         order=self.object,
                         service=service,
                         size=size,
@@ -136,18 +136,24 @@ class CheckoutView(LoginRequiredMixin, CreateView):
                         quantity=size_data['quantity'],
                     )
                     for appointment in size_data['appointments']:
-                        try:
-                            appointment_qs = Appointment.objects.get(
-                                id=appointment, reserved=True, confirmed=False)
-                            appointment_qs.order = self.object
-                            appointment_qs.confirmed = True
-                            appointment.last_updated = localtime(now())
-                            appointment_qs.save()
-                        except Appointment.DoesNotExist:
-                            messages.error(self.request,  "Unable to book the appointment you selected. \
-                                Please try again")
-                            return redirect(reverse('service_appointments',
-                                                    args=[int(item_id)]))
+                        for appointment_id, appointment_data in appointment:
+                            try:
+                                appointment_qs = Appointment.objects.get(
+                                    id=appointment_id,
+                                    reserved=True,
+                                    confirmed=False
+                                )
+                                appointment_qs.order = self.object
+                                appointment_qs.order_lineitem = lineitem
+                                appointment_qs.taxi = appointment_data
+                                appointment_qs.confirmed = True
+                                appointment.last_updated = localtime(now())
+                                appointment_qs.save()
+                            except Appointment.DoesNotExist:
+                                messages.error(self.request, "Unable to book the appointment you selected. \
+                                    Please try again")
+                                return redirect(reverse('service_appointments',
+                                                        args=[int(item_id)]))
                 except Service.DoesNotExist:
                     messages.error(self.request, "One of the services in your bag wasn't found in \
                             our database. Please call us for assistance!")
