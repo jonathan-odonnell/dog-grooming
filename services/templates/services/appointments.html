@@ -51,7 +51,7 @@
             <form id="appointments-form" action="{% url 'add_service_to_bag' service.id %}" method="POST">
                 {% csrf_token %}
                 {{ form.appointment | as_crispy_field }}
-                {{ form.pets | as_crispy_field }}
+                {{ form.pet | as_crispy_field }}
                 {{ form.comments | as_crispy_field }}
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="id_taxi" name="taxi">

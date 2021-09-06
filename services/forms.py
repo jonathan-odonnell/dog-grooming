@@ -85,7 +85,7 @@ class AppointmentForm(forms.Form):
         self.helper = FormHelper(self)
         self.helper.field_class = 'mb-3'
         pet_choices = [('', 'Pet *')] + [(p.id, p.name) for p in pets]
-        self.fields['pets'] = forms.ChoiceField(choices=pet_choices)
+        self.fields['pet'] = forms.ChoiceField(choices=pet_choices)
         self.fields['comments'].widget.attrs = {
             'placeholder': 'Comments',
             'rows': '8',
