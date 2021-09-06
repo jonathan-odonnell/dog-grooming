@@ -18,7 +18,7 @@ from calendar import Calendar
 
 
 class ServicesView(ListView):
-    queryset = Service.objects.annotate(
+    queryset = Service.objects.exclude(id=5).annotate(
         price=Min('prices__price')).order_by('id')
     context_object_name = 'services'
     template_name = 'services/services.html'
