@@ -21,14 +21,16 @@ class AddServiceToBagView(View):
     def post(self, request, item_id):
         service = get_object_or_404(Service, id=item_id)
         bag = request.session.get('bag', {'services': {}})
-        size = Pet.objects.get(id=request.POST['pet']).get_size()
+        size = Pet.objects.get(id=request.POST['pet']).breed.get_size()
         start_time = make_aware(datetime.strptime(
             request.POST['appointment'], '%d/%m/%Y %H:%M'))
-        pickup = 'taxi' in request.POST
+        taxi = 'taxi' in request.POST
 
         if item_id == '1':
             appointment = Appointment.objects.get_or_create(
+                start_time=start_time,
                 start_time__gte=start_time,
+                end_time=start_time + timedelta(hours=3),
                 end_time__gte=start_time + timedelta(hours=3),
                 comments=request.POST['comments'],
                 reserved=True,
@@ -37,7 +39,9 @@ class AddServiceToBagView(View):
         else:
             appointment = Appointment.objects.get_or_create(
                 start_time__gte=start_time,
+                start_time=start_time,
                 end_time__gte=start_time + timedelta(hours=2),
+                end_time=start_time + timedelta(hours=2),
                 comments=request.POST['comments'],
                 reserved=True,
                 last_updated=localtime(now())
@@ -52,20 +56,20 @@ class AddServiceToBagView(View):
             if size in bag['services'][item_id].keys():
                 bag['services'][item_id][size]['quantity'] += 1
                 bag['services'][item_id][size]['appointments'].append(
-                    [{appointment.id: pickup}])
+                    [{appointment[0].id: taxi}])
                 messages.success(
                     request, f'Added {service.name} for {size} dog to bag')
             else:
                 bag['services'][item_id][size] = {
                     'quantity': 1,
-                    'appointments': [{appointment.id: pickup}]
+                    'appointments': [{appointment[1].id: taxi}]
                 }
                 messages.success(
                     request, f'Added {service.name} for {size} dog to bag')
         else:
             bag['services'][item_id] = {size: {
                 'quantity': 1,
-                'appointments': [{appointment.id: pickup}]
+                'appointments': [{appointment[0].id: taxi}]
             }}
             messages.success(
                 request, f'Added {service.name} for {size} dog to bag')
