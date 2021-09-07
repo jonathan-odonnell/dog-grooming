@@ -132,30 +132,38 @@ class StripeWH_Handler:
                 )
                 for item_id, item_data in json.loads(
                         bag['services']).items():
-                    for size, size_data in item_data.items():
-                        service = Service.objects.get(id=item_id)
-                        prices = Price.objects.get(service=service, size=size)
-                        lineitem = OrderLineItem.objects.create(
-                            order=order,
+                    service = Service.objects.get(id=item_id)
+                    if isinstance(item_data, int):
+                        item_price = Price.objects.get(
+                            service=service, size=None)
+                        OrderLineItem.objects.create(
+                            order=self.object,
                             service=service,
-                            size=size,
-                            price=prices.price,
-                            quantity=size_data['quantity'],
+                            price=item_price.price,
+                            quantity=item_data,
                         )
-                        for appointment in size_data['appointments']:
-                            for appointment_id, appointment_data \
-                                    in appointment:
-                                appointment_qs = Appointment.objects.get(
-                                    id=appointment_id,
+                    else:
+                        for size, size_data in item_data.items():
+                            item_price = Price.objects.get(
+                                service=service, size=size)
+                            OrderLineItem.objects.create(
+                                order=self.object,
+                                service=service,
+                                size=size,
+                                price=item_price.price,
+                                quantity=size_data['quantity'],
+                            )
+                            for appointment in size_data[
+                                    'appointments'].keys():
+                                appointment = Appointment.objects.get(
+                                    id=appointment,
                                     reserved=True,
                                     confirmed=False
                                 )
-                                appointment_qs.order = self.object
-                                appointment_qs.order_lineitem = lineitem
-                                appointment_qs.taxi = appointment_data
-                                appointment_qs.confirmed = True
+                                appointment.order = self.object
+                                appointment.confirmed = True
                                 appointment.last_updated = localtime(now())
-                                appointment_qs.save()
+                                appointment.save()
             except Exception as e:
                 if order:
                     order.delete()
