@@ -16,29 +16,34 @@ def bag_contents(request):
 
     for item_id, item_data in bag['services'].items():
         service = get_object_or_404(Service, id=item_id)
-        for size, size_data in item_data.items():
-            price = get_object_or_404(Price, service=service, size=size)
-            order_total += item_data[size]['quantity'] * price.price
-            item_count += item_data[size]['quantity']
-            appointments = []
-            for appointment, taxi in size_data['appointments']:
-                appointment = get_object_or_404(Appointment, id=appointment)
-                item_price = price.price
-                if taxi:
-                    item_price += Decimal(10.00)
-                    order_total += Decimal(10.00)
-                appointments.append({
-                    'appointment': appointment,
-                    'taxi': taxi,
-                    'price': item_price,
-                })
+        if isinstance(item_data, int):
+            item_price = get_object_or_404(Price, service=service, size=None)
+            order_total += item_data * item_price.price
+            item_count += item_data
             services.append({
                 'item_id': item_id,
                 'service': service,
-                'size': size,
-                'quantity': item_data[size]['quantity'],
-                'appointments': appointments,
+                'item_price': item_price,
+                'quantity': item_data,
             })
+        else:
+            for size, size_data in item_data.items():
+                item_price = get_object_or_404(
+                    Price, service=service, size=size)
+                order_total += item_data[size]['quantity'] * item_price.price
+                item_count += item_data[size]['quantity']
+                appointments = []
+                for appointment in size_data['appointments'].keys():
+                    appointment = get_object_or_404(
+                        Appointment, id=appointment)
+                    appointments.append(appointment)
+                services.append({
+                    'item_id': item_id,
+                    'service': service,
+                    'item_price': item_price,
+                    'quantity': item_data[size]['quantity'],
+                    'appointments': appointments,
+                })
 
     if coupon:
         current_date = date.today()
@@ -47,7 +52,7 @@ def bag_contents(request):
             name=coupon,
             start_date_gte=current_date,
             end_date_lte=current_date
-            )
+        )
         discount = coupon_qs.amount
 
     grand_total = Decimal(order_total - discount)
