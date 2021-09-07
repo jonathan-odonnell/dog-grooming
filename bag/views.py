@@ -28,6 +28,7 @@ class AddServiceToBagView(View):
 
         if item_id == '1':
             appointment = Appointment.objects.get_or_create(
+                service=service,
                 start_time=start_time,
                 start_time__gte=start_time,
                 end_time=start_time + timedelta(hours=3),
@@ -38,6 +39,7 @@ class AddServiceToBagView(View):
             )
         else:
             appointment = Appointment.objects.get_or_create(
+                service=service,
                 start_time__gte=start_time,
                 start_time=start_time,
                 end_time__gte=start_time + timedelta(hours=2),
@@ -88,23 +90,23 @@ class RemoveServiceFromBagView(View):
             size = request.POST['size']
             appointment = request.POST['appointment']
             bag['services'][item_id][size]['quantity'] -= 1
-            bag['services'][item_id][size]['appointments'].remove(appointment)
 
-            for item in bag['services'][item_id][size]['appointments']:
-                if appointment in item.keys():
-                    bag['services'][item_id][size]['appointments'].pop(item)
+            for appointment_item in bag['services'][item_id][
+                    size]['appointments']:
+                for appointment_id, taxi in appointment_item.items():
+                    if taxi:
+                        bag['services'][5] -= 1
+                    if appointment == appointment_id:
+                        bag['services'][item_id][size]['appointments'].pop(
+                            appointment)
 
-            if bag['services'][item_id][size]['quantity'] == 0:
+            if not bag['services'][item_id][size]['quantity']:
                 bag['services'][item_id].pop(size)
 
             if not bag['services'][item_id]:
                 bag['services'].pop(item_id)
 
-            appointment = Appointment.objects.get(id=appointment)
-            appointment.comments = None
-            appointment.reserved = False
-            appointment.last_updated = None
-            appointment.save()
+            appointment = Appointment.objects.get(id=appointment).delete()
             request.session['bag'] = bag
             bag_content = render_to_string('bag/bag-content.html', {}, request)
             return JsonResponse({'bag_content': bag_content})
