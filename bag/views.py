@@ -54,7 +54,8 @@ class AddServiceToBagView(View):
                 request, 'Appointment is no longer available. \
                     Please try again.')
             return redirect(request.META.get('HTTP_REFERER'))
-        elif item_id in bag['services'].keys():
+
+        if item_id in bag['services'].keys():
             if size in bag['services'][item_id].keys():
                 bag['services'][item_id][size]['quantity'] += 1
                 bag['services'][item_id][size]['appointments'].append(
@@ -75,6 +76,12 @@ class AddServiceToBagView(View):
             }}
             messages.success(
                 request, f'Added {service.name} for {size} dog to bag')
+
+        if taxi:
+            if 5 in bag['services'].keys():
+                bag['services'][5] += 1
+            else:
+                bag['services'][5] = 1
 
         request.session['bag'] = bag
         return redirect(reverse('services'))
