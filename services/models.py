@@ -31,7 +31,8 @@ class Price(models.Model):
 
     service = models.ForeignKey(
         Service, on_delete=models.CASCADE, related_name='prices')
-    size = models.CharField(max_length=20, choices=CHOICES)
+    size = models.CharField(max_length=20, null=True,
+                            blank=True, choices=CHOICES)
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
@@ -71,14 +72,12 @@ class Appointment(models.Model):
     order = models.ForeignKey('orders.Order', null=True, blank=True,
                               on_delete=models.CASCADE,
                               related_name='appointments')
-    order_lineitem = models.ForeignKey('orders.OrderLineItem',
-                                       null=True, blank=True,
-                                       on_delete=models.CASCADE,
-                                       related_name='appointments')
+    service = models.ForeignKey(Service, null=True, blank=True,
+                                on_delete=models.SET_NULL,
+                                related_name='appointments')
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     comments = models.TextField(null=True, blank=True)
-    taxi = models.BooleanField(default=False)
     reserved = models.BooleanField(default=False)
     confirmed = models.BooleanField(default=False)
     task_id = models.CharField(max_length=50, null=True,
