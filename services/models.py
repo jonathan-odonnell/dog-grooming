@@ -60,6 +60,8 @@ class Availability(models.Model):
 class AppointmentManager(models.Manager):
     def available_appointments(self):
         last_updated = localtime(now()) - timedelta(hours=2)
+        self.filter(last_updated__lte=last_updated,
+                    reserved=True, confirmed=False).delete()
         return self.filter(
             models.Q(confirmed=True)
             | models.Q(last_updated__gte=last_updated))
