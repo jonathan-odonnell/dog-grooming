@@ -154,9 +154,9 @@ class StripeWH_Handler:
                                 quantity=size_data['quantity'],
                             )
                             for appointment in size_data[
-                                    'appointments'].keys():
+                                    'appointments']:
                                 appointment = Appointment.objects.get(
-                                    id=appointment,
+                                    id=appointment.keys()[0],
                                     reserved=True,
                                     confirmed=False
                                 )

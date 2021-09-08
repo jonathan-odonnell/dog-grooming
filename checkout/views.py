@@ -146,10 +146,10 @@ class CheckoutView(LoginRequiredMixin, CreateView):
                             price=item_price.price,
                             quantity=size_data['quantity'],
                         )
-                        for appointment in size_data['appointments'].keys():
+                        for appointment in size_data['appointments']:
                             try:
                                 appointment = Appointment.objects.get(
-                                    id=appointment,
+                                    id=appointment.keys()[0],
                                     reserved=True,
                                     confirmed=False
                                 )
