@@ -95,23 +95,26 @@ class RemoveServiceFromBagView(View):
         try:
             bag = request.session.get('bag', {})
             size = request.POST['size']
-            appointment = request.POST['appointment']
+            appointment = int(request.POST['appointment'])
             bag['services'][item_id][size]['quantity'] -= 1
 
             for appointment_item in bag['services'][item_id][
                     size]['appointments']:
                 for appointment_id, taxi in appointment_item.items():
                     if taxi:
-                        bag['services'][5] -= 1
+                        bag['services']['5'] -= 1
                     if appointment == appointment_id:
                         bag['services'][item_id][size]['appointments'].pop(
-                            appointment)
+                            appointment_item)
 
             if not bag['services'][item_id][size]['quantity']:
                 bag['services'][item_id].pop(size)
 
             if not bag['services'][item_id]:
                 bag['services'].pop(item_id)
+
+            if not bag['services']['5']:
+                bag['services'].pop('5')
 
             appointment = Appointment.objects.get(id=appointment).delete()
             request.session['bag'] = bag
