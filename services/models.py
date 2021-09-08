@@ -53,8 +53,9 @@ class Availability(models.Model):
         return localtz.strftime(fmt)
 
     def __str__(self):
-        return f'{self.convert_to_localtime(self.start_time)} - \
-            {self.convert_to_localtime(self.end_time)}'
+        start_time = self.convert_to_localtime(self.start_time)
+        end_time = self.convert_to_localtime(self.end_time)
+        return f'{start_time} - {end_time}'
 
 
 class AppointmentManager(models.Manager):
@@ -93,9 +94,10 @@ class Appointment(models.Model):
         return localtz.strftime(fmt)
 
     def __str__(self):
-        return f'{self.convert_to_localtime(self.start_time)} - \
-            {self.convert_to_localtime(self.end_time)}'
-    """
+        start_time = self.convert_to_localtime(self.start_time)
+        end_time = self.convert_to_localtime(self.end_time)
+        return f'{start_time} - {end_time}'
+
     def schedule_reminder(self):
         from .tasks import send_sms_reminder
         appointment_time = localtime(self.start_time)
@@ -120,4 +122,3 @@ class Appointment(models.Model):
         if self.confirmed:
             self.task_id = self.schedule_reminder()
         super().save(*args, **kwargs)
-    """
