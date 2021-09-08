@@ -17,7 +17,7 @@
         </div>
         <div class="col-12 offset-4 mb-2">
             <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}"
-                data-size="{{ item.size }}" data-appointment="{{ appointment.id}}">
+                data-size="{{ item.size }}" data-appointment="{{ appointment_item.appointment.id}}">
                 <small>Remove</small>
             </a>
         </div>
@@ -69,7 +69,7 @@
                     </td>
                     <td class="py-3">
                         <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}"
-                            data-size="{{ item.size }}" data-appointment="{{ appointment.id}}">
+                            data-size="{{ item.size }}" data-appointment="{{ appointment_item.appointment.id}}">
                             <small>Remove</small>
                         </a>
                     </td>
