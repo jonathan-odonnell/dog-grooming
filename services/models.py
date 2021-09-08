@@ -59,9 +59,10 @@ class Availability(models.Model):
 
 class AppointmentManager(models.Manager):
     def available_appointments(self):
-        current_time = localtime(now())
-        return self.filter(models.Q(confirmed=True) | models.Q(
-            last_updated__gte=current_time+timedelta(hours=2)))
+        last_updated = localtime(now()) - timedelta(hours=2)
+        return self.filter(
+            models.Q(confirmed=True)
+            | models.Q(last_updated__gte=last_updated))
 
 
 class Appointment(models.Model):
@@ -92,7 +93,7 @@ class Appointment(models.Model):
     def __str__(self):
         return f'{self.convert_to_localtime(self.start_time)} - \
             {self.convert_to_localtime(self.end_time)}'
-
+    """
     def schedule_reminder(self):
         from .tasks import send_sms_reminder
         appointment_time = localtime(self.start_time)
@@ -117,3 +118,4 @@ class Appointment(models.Model):
         if self.confirmed:
             self.task_id = self.schedule_reminder()
         super().save(*args, **kwargs)
+    """

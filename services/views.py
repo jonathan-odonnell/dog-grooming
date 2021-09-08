@@ -103,9 +103,9 @@ class AppointmentsView(LoginRequiredMixin, DetailView):
         if start_time == end_time:
             appointments = [(start_time, start_time)] + [(end_time, end_time)]
         else:
-            appointments = Appointment.objects.filter(
+            appointments = Appointment.objects.available_appointments().filter(
                 start_time__date=date,
-                end_time__date=date, confirmed=False)
+                end_time__date=date)
             appointments = sorted([(start_time, start_time)] +
                                   [(localtime(a.start_time),
                                     localtime(a.end_time))
