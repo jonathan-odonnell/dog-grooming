@@ -1,4 +1,6 @@
 <p class="my-0"><strong>{{ item.service.name }}</strong></p>
-<p class="my-0"><strong>Dog Size: </strong>{{ item.price.size }}</p>
+<p class="my-0"><strong>Dog Size: </strong>{{ item.item_price.size }}</p>
+{% if appointment_item %}
 <p class="my-0"><strong>Appointment: </strong>{{ appointment_item.appointment.start_time |date:"l d F Y" }} {{ appointment_item.appointment.start_time |time:"H:i" }}</p>
-<p class="my-0">{% if appointment_item.taxi %}Pickup and drop off Included{% endif %}</p>
+{% endif %}
+<p class="my-0"><strong>WGW Taxi: </strong>{% if appointment_item.taxi %}Included{% else %}Not Included{% endif%}</p>
