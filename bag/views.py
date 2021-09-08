@@ -27,7 +27,8 @@ class AddServiceToBagView(View):
         taxi = 'taxi' in request.POST
 
         if item_id == '1':
-            appointment = Appointment.objects.get_or_create(
+            appointment = Appointment.objects.available_appointments()
+            appointment = appointment.get_or_create(
                 service=service,
                 start_time=start_time,
                 start_time__gte=start_time,
@@ -38,7 +39,8 @@ class AddServiceToBagView(View):
                 last_updated=localtime(now())
             )
         else:
-            appointment = Appointment.objects.get_or_create(
+            appointment = Appointment.objects.available_appointments()
+            appointment = appointment.get_or_create(
                 service=service,
                 start_time__gte=start_time,
                 start_time=start_time,
