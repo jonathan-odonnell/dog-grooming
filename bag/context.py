@@ -33,10 +33,11 @@ def bag_contents(request):
                 order_total += item_data[size]['quantity'] * item_price.price
                 item_count += item_data[size]['quantity']
                 appointments = []
-                for appointment in size_data['appointments'].keys():
-                    appointment = get_object_or_404(
-                        Appointment, id=appointment)
-                    appointments.append(appointment)
+                for appointment in size_data['appointments']:
+                    for appointment_id in appointment.keys():
+                        appointment = get_object_or_404(
+                            Appointment, id=appointment_id)
+                        appointments.append(appointment)
                 services.append({
                     'item_id': item_id,
                     'service': service,
